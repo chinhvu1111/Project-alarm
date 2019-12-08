@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:seekBar="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.preference.PreferenceCategory
+        android:title="Thiết lập chung"
+        app:iconSpaceReserved="false">
+
+        <androidx.preference.ListPreference
+            android:title="Theme"
+            android:summary="%s"
+            android:entries="@array/Themes"
+            android:entryValues="@array/Themes"
+            android:key="@string/THEME_KEY"
+            android:defaultValue="@string/themeDefaultValue"
+            app:iconSpaceReserved="false"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="Thông tin thiết lập"
+        app:iconSpaceReserved="false">
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
+            android:key="@string/WORK_KEY"
+            android:title="Thời gian chu kỳ"
+            android:enabled="true"
+            android:defaultValue="25"
+            seekBar:msbp_minValue="1"
+            seekBar:msbp_maxValue="60"
+            seekBar:msbp_interval="1"
+            seekBar:msbp_measurementUnit="phút"
+            seekBar:msbp_dialogEnabled="false"/>
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
+            android:key="@string/BREAK_KEY"
+            android:title="Thời gian nghỉ ngắn"
+            android:enabled="true"
+            android:defaultValue="5"
+            seekBar:msbp_minValue="1"
+            seekBar:msbp_maxValue="30"
+            seekBar:msbp_interval="1"
+            seekBar:msbp_measurementUnit="phút"
+            seekBar:msbp_dialogEnabled="false"/>
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
+            android:key="@string/LONG_BREAK_KEY"
+            android:title="Thời gian nghỉ dài"
+            android:enabled="true"
+            android:defaultValue="15"
+            seekBar:msbp_minValue="1"
+            seekBar:msbp_maxValue="60"
+            seekBar:msbp_interval="1"
+            seekBar:msbp_measurementUnit="phút"
+            seekBar:msbp_dialogEnabled="false"/>
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
+            android:key="@string/LOOP_KEY"
+            android:title="Số vòng lặp trong 1 chu kỳ"
+            android:enabled="true"
+            android:defaultValue="4"
+            seekBar:msbp_minValue="1"
+            seekBar:msbp_maxValue="10"
+            seekBar:msbp_interval="1"
+            seekBar:msbp_measurementUnit="vòng lặp"
+            seekBar:msbp_dialogEnabled="false"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="Thông báo khi kết thúc chu kỳ"
+        app:iconSpaceReserved="false">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:title="Rung"
+            android:key="@string/VIBRATE_KEY"
+            android:defaultValue="@bool/vibrateDefaultValue"
+            app:iconSpaceReserved="false"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="Âm thanh"
+        app:iconSpaceReserved="false">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:title="Âm thanh trong phiên"
+            android:key="@string/RINGTONE_KEY"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"/>
+
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/background_group"
+    android:layout_margin="5dp"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:background="@drawable/background_avatar_group"
+        android:layout_margin="10dp"
+        android:id="@+id/imgIconGroup"
+        android:src="@drawable/ic_add"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+    <TextView
+        android:textColor="@color/white"
+        android:layout_marginTop="15dp"
+        android:textSize="15dp"
+        android:id="@+id/tvNameGroup"
+        android:layout_toRightOf="@id/imgIconGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:background="@drawable/background_task_item"
+        android:id="@+id/lnMember"
+        android:layout_alignLeft="@id/tvNameGroup"
+        android:layout_below="@+id/tvNameGroup"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_member"
+            android:id="@+id/imgMember"
+            android:layout_width="20dp"
+            android:layout_height="20dp">
+        </ImageView>
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/tvNumberOfMembers"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:layout_alignTop="@id/imgMember"
+            android:layout_toRightOf="@id/imgMember"
+            android:text="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/lnHour"
+        android:background="@drawable/background_task_item"
+        android:layout_alignTop="@id/lnMember"
+        android:layout_toRightOf="@+id/lnMember"
+        android:layout_marginLeft="5dp"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/icHour"
+            android:src="@drawable/ic_access_time"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:id="@+id/tvHour"
+            android:layout_toRightOf="@+id/icHour"
+            android:layout_marginLeft="3dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="0h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <Button
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/btnJoin"
+        android:background="@drawable/background_button_join"
+        android:layout_marginRight="15dp"
+        android:text="Tham gia"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

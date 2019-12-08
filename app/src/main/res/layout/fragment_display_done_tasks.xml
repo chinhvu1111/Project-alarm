@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/doi_nui"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <lecho.lib.hellocharts.view.PieChartView
+        android:layout_gravity="center"
+        android:id="@+id/eventsChart"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"/>
+
+    <RadioGroup
+        android:checkedButton="@id/rdDoneEvents"
+        android:id="@+id/toggleEvents"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="right"
+        android:background="@drawable/switch_out_line"
+        android:layout_width="160dp"
+        android:layout_height="40dp">
+        <RadioButton
+            android:textSize="13dp"
+            android:textColor="@color/color_switch_background_done_state"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_weight="1"
+            android:id="@+id/rdDoneEvents"
+            android:background="@drawable/toggle_widget_background"
+            android:text="Hoàn thành"
+            android:button="@null"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+        <RadioButton
+            android:textSize="13dp"
+            android:textColor="@color/color_switch_background_done_state"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_weight="1"
+            android:id="@+id/rdUndoneEvents"
+            android:background="@drawable/toggle_widget_background"
+            android:text="Chưa hoàn thành"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+    </RadioGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="5dp"
+        android:id="@+id/recycleEventDone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

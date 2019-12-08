@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.e15.alarmnats">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:name=".utils.FbApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemeLight">
+        <activity android:name=".activity.CreatingGroupActivity"></activity>
+        <activity android:name=".activity.GroupTask" />
+        <activity android:name=".activity.SignUpActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.TaskManagementActivity" />
+        <activity
+            android:name=".activity.EisenHowerActivity"
+            android:parentActivityName=".Main_AlarmActivity" />
+        <activity android:name=".activity.Alarm_choose_ringtone" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ClockActivity" />
+        <activity android:name=".activity.ChooseRingToneActivity" />
+        <activity android:name=".Main_AlarmActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ChooseTaskActivity" />
+        <activity android:name=".activity.RecaptchaActivity" />
+        <activity android:name=".activity.SetAlarmActivity" />
+        <activity
+            android:name=".activity.SearchSongActivity"
+            android:label="@string/title_activity_display_search_song"
+            android:permission="android.permission.INTERNET"
+            android:theme="@style/AppThemeLight" /> <!-- <activity -->
+        <!-- android:name=".ActivityController.WeatherActivity" -->
+        <!-- android:allowBackup="true" -->
+        <!-- android:icon="@mipmap/ic_launcher" -->
+        <!-- android:label="@string/title_activity_weather" -->
+        <!-- android:permission="android.permission.INTERNET" -->
+        <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
+        <!-- android:supportsRtl="true" -->
+        <!-- android:theme="@style/AppTheme" /> -->
+        <activity android:name=".activity.MathTestActivity" />
+        <activity android:name=".activity.QRscanActivity" />
+        <activity
+            android:name=".activity.AlarmFiredActivity"
+            android:excludeFromRecents="true" /> <!-- <activity android:name=".ActivityController.AlarmListActivity"/> -->
+        <!-- <activity -->
+        <!-- android:name=".ActivityController.WeatherActivity" -->
+        <!-- android:parentActivityName=".AlarmListActivity" /> -->
+        <!-- Needed for LoginActivity to work -->
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.DisplaySchedule" />
+        <activity
+            android:name=".activity.TimerActivity"
+            android:parentActivityName=".Main_AlarmActivity" />
+        <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.ColorSettingActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" /> <!-- <receiver -->
+        <!-- android:name="com.e15.alarmnats.AlarmReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.mine.alarm" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.AlarmReceiver" />
+        <receiver android:name=".utils.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utils.TimerReceiver" />
+
+        <service
+            android:name=".service.PomodoroService"
+            android:exported="false" />
+        <service
+            android:name=".service.RingtonePlayService"
+            android:exported="false" />
+    </application>
+
+</manifest>

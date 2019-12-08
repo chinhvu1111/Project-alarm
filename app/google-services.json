@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "563052237677",
+    "firebase_url": "https://alarmnats.firebaseio.com",
+    "project_id": "alarmnats",
+    "storage_bucket": "alarmnats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563052237677:android:100a4e3d91c61255014064",
+        "android_client_info": {
+          "package_name": "com.e15.alarmnats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563052237677-ktp9b9rtad9qljf0ri01fjdvp4sbqkv2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtNubbyym2i1pJcq1Ck7SiAhpniA18Ruk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563052237677-ktp9b9rtad9qljf0ri01fjdvp4sbqkv2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,91 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    tools:context="com.e15.alarmnats.fragment.CategoryFragment">
+
+    <include
+        android:id="@+id/tv_show_message"
+        layout="@layout/show_message_category_layout"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/lnfilterGroup"
+            android:layout_below="@+id/s"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_choose_group"
+                android:id="@+id/lnSpinnerGroup"
+                android:layout_marginLeft="20dp"
+                android:layout_width="120dp"
+                android:layout_height="25dp"
+                android:layout_weight="8"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <Spinner
+                    android:id="@+id/spnGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_choose_group"
+                android:id="@+id/lnSpinnerMember"
+                android:layout_toRightOf="@+id/lnSpinnerGroup"
+                android:layout_marginLeft="20dp"
+                android:layout_width="120dp"
+                android:layout_height="25dp"
+                android:layout_weight="8"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <Spinner
+                    android:id="@+id/spnMember"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
+
+            <TextView
+                android:gravity="left"
+                android:textColor="@color/white"
+                android:layout_alignLeft="@+id/lnSpinnerGroup"
+                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:text="Nhóm"  />
+            <TextView
+                android:gravity="left"
+                android:textColor="@color/white"
+                android:layout_alignLeft="@+id/lnSpinnerMember"
+                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:text="Thành viên"  />
+        </RelativeLayout>
+
+        <com.multilevelview.MultiLevelRecyclerView
+            android:layout_below="@+id/lnfilterGroup"
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+
+    </RelativeLayout>
+
+
+
+</FrameLayout>

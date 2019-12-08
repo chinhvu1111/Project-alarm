@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    >
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="3">-->
+
+
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </FrameLayout>
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:fitsSystemWindows="true"
+            android:id="@+id/drawLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.alamkanak.weekview.WeekView
+                android:id="@+id/weekView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:columnGap="8dp"
+                app:dayBackgroundColor="#05000000"
+                app:eventTextColor="@android:color/white"
+                app:headerColumnBackground="#ffffffff"
+                app:headerColumnPadding="2dp"
+                app:headerColumnTextColor="@color/toolbar_text"
+                app:headerRowBackgroundColor="@color/toolbar"
+                app:headerRowPadding="12dp"
+                app:hourHeight="60dp"
+                app:noOfVisibleDays="3"
+                app:textSize="12sp"
+                app:todayBackgroundColor="#1848adff"
+                app:todayHeaderTextColor="@color/accent" />
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="wrap_content"
+                android:maxWidth="250dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@drawable/navigation_background"
+                android:fitsSystemWindows="true"
+                app:itemIconTint="@color/dark_gray"
+                app:itemTextColor="@color/white"
+                app:menu="@menu/drawermenu">
+
+            </com.google.android.material.navigation.NavigationView>
+
+        </androidx.drawerlayout.widget.DrawerLayout>
+
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<Button-->
+    <!--android:onClick="addEvent"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:text="Add" />-->
+
+    <!--</LinearLayout>-->
+
+</LinearLayout>

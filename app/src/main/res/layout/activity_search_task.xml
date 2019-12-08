@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/huou_toi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.appcompat.widget.SearchView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/search_events"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/search_view_drawable"
+        android:elevation="2dp"
+        app:queryBackground="@android:color/transparent"
+        app:queryHint="Tìm kiếm"
+        app:closeIcon="@drawable/ic_backspace"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/search_events"
+        android:id="@+id/recyclerSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.DisplayClassifyTasksFragment">
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_weight="0.1"/>
+                <TextView
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:layout_height="20dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:text="Khẩn cấp"/>
+                <TextView
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:text="Không khẩn cấp"/>
+
+            </TableRow>
+
+            <TableRow>
+
+                <com.e15.alarmnats.view.VerticalTextView
+                    android:textStyle="bold"
+                    android:id="@+id/important"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Chinhvu"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="300dp"/>
+
+                <TableLayout
+                    android:layout_weight="1"
+                    android:stretchColumns="*"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <TableRow>
+                        <LinearLayout android:onClick="donow"
+                            android:id="@+id/layoutDonow"
+                            android:background="@drawable/classify_task_background"
+                            android:layout_width="0dp"
+                            android:layout_height="300dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/listdonow"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </LinearLayout>
+                    </TableRow>
+
+                </TableLayout>
+
+                <TableLayout
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="*"
+                    android:layout_width="0dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout android:onClick="arrange"
+                            android:id="@+id/layoutArrange"
+                            android:layout_width="0dp"
+                            android:background="@drawable/classify_task_background"
+                            android:layout_height="300dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/listarrange"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </LinearLayout>
+                    </TableRow>
+                </TableLayout>
+
+            </TableRow>
+
+            <TableRow>
+
+                <com.e15.alarmnats.view.VerticalTextView
+                    android:textStyle="bold"
+                    android:id="@+id/notimportant"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Chinhvu"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="300dp"/>
+
+                <TableLayout
+                    android:layout_weight="1"
+                    android:stretchColumns="*"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <TableRow>
+
+                        <LinearLayout android:onClick="donow"
+                            android:id="@+id/layoutHelp"
+                            android:background="@drawable/classify_task_background"
+                            android:layout_width="0dp"
+                            android:layout_height="300dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/listhelp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </LinearLayout>
+                    </TableRow>
+
+                </TableLayout>
+
+                <TableLayout
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="*"
+                    android:layout_width="0dp">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout android:onClick="arrange"
+                            android:id="@+id/layoutIgnore"
+                            android:layout_width="0dp"
+                            android:background="@drawable/classify_task_background"
+                            android:layout_height="300dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/listignore"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </LinearLayout>
+                    </TableRow>
+                </TableLayout>
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+</LinearLayout>

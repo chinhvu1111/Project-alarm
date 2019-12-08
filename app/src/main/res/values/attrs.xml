@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ColorCircle">
+        <attr name="color" format="color"/>
+    </declare-styleable>
+
+    <!--custom attributes for both dark and light theme -->
+    <attr name="TextMenuHeader" format="reference"/>
+    <attr name="MainContainerBackground" format="reference"/>
+    <attr name="BackgroundSetting" format="reference"/>
+    <attr name="event_item_background" format="reference"/>
+    <attr name="event_item_selected" format="reference"/>
+    <attr name="event_title_color" format="reference"/>
+    <attr name="event_title_color_setting_task" format="reference"/>
+    <attr name="event_time_place_color" format="reference"/>
+    <attr name="date_time_text_color" format="reference"/>
+    <attr name="message_layout_color" format="reference"/>
+    <attr name="edittext_color" format="reference"/>
+    <attr name="edittext_bottombar_color" format="reference"/>
+    <attr name="edittext_hint_color" format="reference"/>
+    <attr name="box_color" format="reference"/>
+    <attr name="save_button_background" format="reference"/>
+
+
+    <!--vector icon color based on theme-->
+    <attr name="icon_color" format="reference"/>
+
+</resources>

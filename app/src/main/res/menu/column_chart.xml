@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="lecho.lib.hellocharts.samples.ColumnChartActivity">
+
+    <item
+        android:id="@+id/total_task"
+        android:title="Tổng thời gian"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/respective_task"
+        android:title="Thời gian của từng tác vụ"
+        app:showAsAction="never" />
+
+</menu>

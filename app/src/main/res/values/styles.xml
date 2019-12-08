@@ -1,0 +1,242 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- converted UI -->
+    <style name="myTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="android:background">@color/medium_sea_green</item>-->
+        <item name="android:background">@color/sea_green</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@android:color/holo_red_light</item>
+        <item name="android:actionBarStyle">@style/myTheme.ActionBar</item>
+        <item name="actionBarStyle">@style/myTheme.ActionBar</item>
+        <item name="android:actionMenuTextColor">@color/cadet_blue</item>
+    </style>
+
+    <style name="CustomPopupTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">-4dp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="myTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@color/sea_green</item>
+        <item name="android:titleTextStyle">@style/myTheme.ActionBar.Text</item>
+    </style>
+
+    <style name="myTheme.ActionBar.Text" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--_________________________________________________________________________________________-->
+    <style name="myTheme2" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="android:background">@color/medium_sea_green</item>-->
+        <item name="android:background">@color/sea_green</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@android:color/holo_red_light</item>
+        <item name="android:actionBarStyle">@style/myTheme.ActionBar2</item>
+        <item name="actionBarStyle">@style/myTheme.ActionBar2</item>
+        <item name="android:actionMenuTextColor">@color/cadet_blue</item>
+    </style>
+
+    <style name="myTheme.ActionBar2" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@color/sea_green</item>
+        <item name="android:titleTextStyle">@style/myTheme.ActionBar.Text</item>
+    </style>
+
+    <style name="myTheme.ActionBar.Text2" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <!--_________________________________________________________________________________________-->
+
+    <style name="ActionBar" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="actionMenuTextColor">@color/sea_green</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="titleTextStyle">@style/ActionBarTitleText</item>
+        <item name="subtitleTextStyle">@style/ActionBarSubTitleText</item>
+    </style>
+
+    <style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ActionBarSubTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Category reminder theme -->
+    <style name="AppThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:editTextColor">@color/color_circle_gray</item>
+        <item name="TextMenuHeader">@color/color_white</item>
+        <item name="MainContainerBackground">@color/colorPrimary</item>
+        <item name="icon_color">@color/icon_light</item>
+        <item name="event_item_background">@color/eventBackgroundDark</item>
+        <item name="event_item_selected">@color/eventBackgroundSelectedDark</item>
+        <item name="event_title_color">@color/color_white</item>
+        <item name="event_time_place_color">@color/event_time_light_color</item>
+        <item name="message_layout_color">@color/message_layout_dark_color</item>
+        <item name="edittext_color">@color/colorPrimaryDark</item>
+        <item name="edittext_bottombar_color">@color/eventBackgroundSelected</item>
+        <item name="android:textColorHint">@color/edittext_hint_dark_color</item>
+        <item name="box_color">@color/eventBackground</item>
+        <item name="save_button_background">@color/eventBackground</item>
+        <item name="date_time_text_color">@color/color_white</item>
+    </style>
+
+
+    <!-- Light Theme Style -->
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:editTextColor">@color/color_dark</item>
+        <item name="TextMenuHeader">@color/color_white</item>
+        <item name="MainContainerBackground">@android:color/transparent</item>
+        <item name="BackgroundSetting">@color/white</item>
+        <item name="icon_color">@color/icon_dark</item>
+        <item name="event_item_background">@color/eventBackgroundLight</item>
+        <item name="event_item_selected">@color/eventBackgroundSelectedLight</item>
+        <item name="event_title_color">@color/color_dark</item>
+        <item name="event_title_color_setting_task">@color/white</item>
+        <item name="event_time_place_color">@color/event_time_dark_color</item>
+        <item name="message_layout_color">@color/message_layout_light_color</item>
+        <item name="edittext_color">@color/color_white</item>
+        <item name="edittext_bottombar_color">@color/eventBackgroundLight</item>
+        <item name="android:textColorHint">@color/edittext_hint_light_color</item>
+        <item name="box_color">@color/eventBackgroundLight</item>
+        <item name="save_button_background">@color/eventBackgroundLight</item>
+        <item name="date_time_text_color">@color/date_time_dark_color</item>
+    </style>
+
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/dark_gray</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:textColor">@color/dark_blue</item>
+    </style>
+
+    <!-- theme of weekView -->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/toolbar</item>
+        <item name="colorPrimaryDark">@color/accent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:textColorPrimary">@color/toolbar_text</item>
+        <item name="actionMenuTextColor">@color/toolbar_text</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="colorControlActivated">@color/accent</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="edit_button">
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <!--<item name="android:background">@android:drawable/btn_default</item>-->
+    </style>
+
+    <!-- Theme of pomodoro -->
+    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorLightPrimary</item>
+        <item name="colorPrimaryDark">@color/colorLightPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorBlackPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorLight</item>
+        <item name="android:windowBackground">@color/colorLightPrimary</item>
+        <item name="colorControlNormal">@color/colorLightPrimary</item>
+        <item name="alertDialogTheme">@style/AlertDialogLight</item>
+        <item name="android:windowAnimationStyle">@style/activityTransition</item>
+    </style>
+
+    <style name="AlertDialogLight" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorControlNormal">@color/textColorLight</item>
+        <item name="textColorAlertDialogListItem">@color/colorBlackPrimary</item>
+    </style>
+
+    <style name="activityTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        <item name="android:windowReenterTransition">@android:anim/fade_in</item>
+        <item name="android:windowReturnTransition">@android:anim/fade_in</item>
+    </style>
+    <style name="DarkAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorDarkPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDarkPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/textColorDarkPrimary</item>
+        <item name="android:windowBackground">@color/colorDarkPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorBlackPrimary</item>
+        <item name="android:windowAnimationStyle">@style/activityTransition</item>
+    </style>
+    <style name="BlackAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorBlackPrimary</item>
+        <item name="colorPrimaryDark">@color/colorBlackPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/textColorDarkPrimary</item>
+        <item name="android:windowBackground">@color/colorBlackPrimary</item>
+        <item name="android:statusBarColor">@color/colorBlackPrimary</item>
+        <item name="android:windowAnimationStyle">@style/activityTransition</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="Theme_Dialog" parent="android:Theme.Holo.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
+    <style name="Mydialog"></style>
+
+</resources>

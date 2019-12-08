@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/the_longest_cold_night"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:textColor="@color/color_white"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:text="Thiết lập"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+    <View
+        android:background="@color/lighterBlue"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSettingGeneral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

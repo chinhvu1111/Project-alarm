@@ -1,0 +1,253 @@
+<resources>
+    <string name="app_name">Alarmnats</string>
+    <string name="question_title">Xin hãy chọn đáp án đúng để tắt báo thức</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="default_question">Mặc định</string>
+    <string name="qr_question">Mã QR</string>
+    <string name="math_question">Giải toán</string>
+    <string name="ok">OK</string>
+    <string name="zero_o_clock">00:00</string>
+    <string name="x_y_z">x*y+z</string>
+    <string name="weather">Thời tiết</string>
+    <string name="choose_ringtone">Chọn nhạc chuông</string>
+    <string name="label">Nhãn</string>
+    <string name="set_alarm">Thiết lập báo thức</string>
+    <string name="recaptcha_question">Kiểm tra reCaptcha</string>
+    <string-array name="question_list">
+        <item>@string/default_question</item>
+        <item>@string/qr_question</item>
+        <item>@string/math_question</item>
+        <item>@string/recaptcha_question</item>
+    </string-array>
+    <string name="Choose_Storage_and_default">Mặc định</string>
+    <string name="Search_from_spotify">Tìm kiếm từ Spotify</string>
+    <string-array name="SearchMusic">
+        <item>@string/Choose_Storage_and_default</item>
+        <item>@string/Search_from_spotify</item>
+    </string-array>
+    <string name="title_activity_weather">Thời tiết</string>
+    <string name="title_activity_function">Chức năng</string>
+    <string name="title_activity_display_search_song">DisplaySearchSong</string>
+    <string name="tag_sharedprefs">com.e15.alarmnats</string>
+    <string name="tag_sharedpref_token">com.e15.alarmnats.token</string>
+    <string name="choose_song">Chọn bài hát</string>
+
+    <string name="ic_alarm">ic_alarm</string>
+    <string name="choose_task">Chọn tác vụ</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <string name="default_">Mặc định</string>
+    <string name="repeat">Lặp lại</string>
+    <string name="never">Không bao giờ</string>
+    <string name="alarm">Báo thức</string>
+    <string name="ringtone">Nhạc chuông</string>
+    <string name="delete_alarm">Xóa báo thức</string>
+    <string name="save_alarm">Lưu báo thức</string>
+    <string name="qr_code">Quét mã QR</string>
+    <string name="math_problems">Giải toán</string>
+    <string name="shake">Rung</string>
+    <string name="recaptcha">Recaptcha</string>
+    <string name="cancel">Hủy</string>
+    <string name="system_ringtone">Nhạc chuông hệ thống</string>
+    <string name="spotify_ringtone">nhạc chuông Spotify</string>
+
+    <color name="switchOn">#f2f2f2</color>
+    <color name="switchOff">#d9d9d9</color>
+
+    <string name="maxsnooze_summary">Không giới hạn</string>
+
+    <string-array name="maxsnoozes_entries">
+        <item>Unlimited</item>
+        <item>1 time</item>
+        <item>2 time</item>
+        <item>3 time</item>
+        <item>4 time</item>
+        <item>5 time</item>
+        <item>6 time</item>
+        <item>8 time</item>
+        <item>9 time</item>
+        <item>10 time</item>
+    </string-array>
+
+    <string-array name="maxsnoozes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="timelimit_entries">
+        <item>10 seconds</item>
+        <item>20 seconds</item>
+        <item>30 seconds</item>
+        <item>40 seconds</item>
+        <item>50 seconds</item>
+    </string-array>
+
+    <string-array name="timelimit_values">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+    </string-array>
+
+    <string name="timelimit_summary">10 seconds</string>
+
+
+    <!-- converted application -->
+    <string name="channel_name">channel_name</string>
+    <string name="channel_description">channel_description</string>
+    <string name="action_settings">Thiết lập</string>
+    <string name="alarm_tune">Nhạc chuông báo thức</string>
+    <string name="space" />
+    <string name="alarm_chooser_toolbar_title">Alarm\u0020Sounds</string>
+    <string name="settings_toolbar_title">Thiết lập</string>
+
+    <!-- reminder category task -->
+    <string name="Min">Nhỏ nhất</string>
+    <string name="Hour">Giờ</string>
+
+    <string name="show_category_create_message">Thêm loại tác vụ để tạo các tác vụ tương ứng</string>
+    <string name="show_event_create_message">Bạn có thể tạo tác vụ ở loại tác vụ này</string>
+
+    <!-- sharepref name -->
+    <string name="user_pref">UsersPref</string>
+    <string name="first_time_event_message">Tin nhắn sự kiện đầu tiên</string>
+
+
+    <string name="edit">Sửa</string>
+    <!--<string name="search_events">Search Events</string>-->
+    <string name="no_detail">Mô tả chi tiết trống</string>
+
+    <!-- menu item -->
+    <string name="menu_edit">Chỉnh sửa</string>
+    <string name="menu_delete">Xóa</string>
+    <string name="menu_detail">Chi tiết</string>
+    <string name="add_sub_task">Tạo tác vụ con</string>
+    <string name="menu_continue">Tiếp tục tác vụ với Pomodoro</string>
+
+
+    <!-- dialog -->
+    <string name="choose_theme">Chọn giao diện</string>
+    <string name="delete_cofirm_message">Thao tác này sẽ xóa toàn bộ tác vụ tương ứng với loại</string>
+    <string name="confirm_sure">Bạn có chắc không?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+
+    <string-array name="colors">
+        <item>#73d216</item>
+        <item>#ff7f2a</item>
+        <item>#5fbcd3</item>
+        <item>#edd400</item>
+        <item>#ff99ff</item>
+        <item>#00ffff</item>
+        <item>#ff5955</item>
+    </string-array>
+
+    <string-array name="type_of_theme">
+        <item>Dark Theme</item>
+        <item>Light Theme</item>
+    </string-array>
+
+    <string name="theme_style">Theme_Style</string>
+
+    <!-- Display schedule -->
+    <string name="action_today">Hôm nay</string>
+    <string name="action_day_view">Hiển thị từng ngày</string>
+    <string name="action_three_day_view">Hiển thị ba ngày một</string>
+    <string name="action_week_view">Hiển thị theo tuần</string>
+    <string name="title_activity_asynchronous">Asynchronous Events</string>
+    <string name="async_error">Could not download events from the internet</string>
+
+    <!-- Pomodoro application -->
+    <string name="Settings">Settings</string>
+
+    <!-- Settings Default Values -->
+    <string name="themeDefaultValue">Dark</string>
+    <integer name="workTimeDefaultValue">25</integer>
+    <integer name="breakTimeDefaultValue">5</integer>
+    <integer name="longBreakTimeDefaultValue">15</integer>
+    <integer name="loopAmountDefaultValue">4</integer>
+    <bool name="vibrateDefaultValue">false</bool>
+
+    <!-- Preference Keys -->
+    <string name="WORK_KEY">pref_work_time</string>
+    <string name="BREAK_KEY">pref_break_time</string>
+    <string name="LONG_BREAK_KEY">pref_long_break_time</string>
+    <string name="LOOP_KEY">pref_loop_amount</string>
+    <string name="VIBRATE_KEY">pref_vibrate</string>
+    <string name="RINGTONE_KEY">pref_ringtone</string>
+    <string name="THEME_KEY">pref_theme_value</string>
+
+    <!-- Themes -->
+    <string name="LightTheme">Light</string>
+    <string name="DarkTheme">Dark</string>
+    <string name="BlackTheme">Black</string>
+
+    <string-array name="Themes">
+        <item>@string/LightTheme</item>
+        <item>@string/DarkTheme</item>
+        <item>@string/BlackTheme</item>
+    </string-array>
+
+    <!-- String values from EisenHower module -->
+    <string name="home">Tác vụ</string>
+    <string name="add">Thêm</string>
+    <string name="displayDone">Tỉ lệ hoàn thành</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="setting">Cài đặt</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="dialog_title">Chọn trạng thái của tác vụ</string>
+    <string name="ok_label">Chấp nhận</string>
+    <string name="dismiss_label">Hủy</string>
+    <string name="clear_all_label">Clear all</string>
+
+    <string-array name="isUrgent">
+        <item>Khẩn cấp</item>
+        <item>Không khẩn cấp</item>
+    </string-array>
+
+    <string-array name="isImportant">
+        <item>Quan trọng</item>
+        <item>Không quan trọng</item>
+    </string-array>
+
+    <string-array name="action_type_events">
+        <item>Làm ngay</item>
+        <item>Sắp xếp thời gian làm sau</item>
+        <item>Có thể nhờ ai đó giúp hoặc để làm sau cùng</item>
+        <item>Bỏ qua thừa thời gian mới làm</item>
+    </string-array>
+
+    <string name="delete">DELETE</string>
+
+    <string name="search_events">Tìm kiếm</string>
+
+    <string-array name="systemCategory">
+        <item>Ăn sáng</item>
+        <item>Ăn trưa</item>
+        <item>Ăn tối</item>
+        <item>Đi làm</item>
+        <item>Đi chơi</item>
+    </string-array>
+
+    <!-- Clos/Open toolbar -->
+    <string name="open">Mở</string>
+    <string name="close">Đóng</string>
+
+</resources>

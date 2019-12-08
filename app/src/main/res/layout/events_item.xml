@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
+
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/event_item_back">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:id="@+id/eventContainer"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/background_item_events"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_centerVertical="true"
+                android:id="@+id/frIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/imgDone"
+                    android:src="@drawable/ic_done_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/imgPlay"
+                    android:src="@drawable/ic_play_circle_outline_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_toRightOf="@id/frIcon"
+                android:id="@+id/visibleLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:orientation="horizontal"
+                        android:id="@+id/layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="20dp"
+                        android:layout_marginRight="20dp">
+                        <TextView
+                            android:layout_alignParentStart="true"
+                            android:id="@+id/tvEventName"
+                            tools:text="Event Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/event_title_color"
+                            android:layout_alignParentLeft="true"
+                            android:textSize="18sp"/>
+                        <TextView
+                            android:id="@+id/tvPercentTask"
+                            android:layout_marginRight="5dp"
+                            android:textColor="@android:color/white"
+                            android:text="100%"
+                            android:layout_alignBottom="@+id/progressBarTask"
+                            android:layout_toStartOf="@+id/progressBarTask"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <ProgressBar
+                            android:id="@+id/progressBarTask"
+                            android:layout_alignBottom="@+id/tvEventName"
+                            android:layout_alignParentRight="true"
+                            android:progressDrawable="@drawable/custom_progressbar"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/expand_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/mExpandIcon"
+                            android:src="@drawable/ic_arrow_up_white_24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tvTime"
+                        tools:text="12 : 30 pm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="?attr/event_time_place_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        tools:text="17 tháng 12 "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="?attr/event_time_place_color"
+                        android:textSize="12sp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"/>
+
+                    <TextView
+                        android:id="@+id/tvPlace"
+                        tools:text="Địa điểm"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/event_time_place_color"
+                        android:textSize="12sp"/>
+                    <com.e15.alarmnats.view.ColorCircle
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/color_circle"
+                        android:layout_width="7dp"
+                        android:layout_height="7dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        />
+                    <TextView
+                        android:id="@+id/tvEdit"
+                        android:text="Sửa"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:layout_alignParentRight="true"
+                        android:layout_toLeftOf="@id/layout"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/descriptionLayout"
+            android:layout_width="match_parent"
+            android:layout_below="@id/visibleLayout"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_marginLeft="50dp"
+                tools:text=" Nội dung trống "
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="?attr/event_title_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="5dp"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

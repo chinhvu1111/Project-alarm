@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Setting alarm">
+        <ListPreference
+            android:defaultValue="Unlimited"
+            android:entries="@array/maxsnoozes_entries"
+            android:entryValues="@array/maxsnoozes_values"
+            android:summary="@string/maxsnooze_summary"
+            android:title="Max snoozes"></ListPreference>
+        <ListPreference
+            android:entries="@array/timelimit_values"
+            android:entryValues="@array/timelimit_values"
+            android:summary="@string/timelimit_summary"
+            android:title="Misson time limit"></ListPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Sound">
+        <CheckBoxPreference
+            android:key=""
+            android:summary="Mute in dismiss mode" android:defaultValue="true"></CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Theme">
+    </PreferenceCategory>
+</PreferenceScreen>

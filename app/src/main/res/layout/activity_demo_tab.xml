@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoPanelHeight="0dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoShadowHeight="4dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_background_tasks"
+        android:orientation="vertical"
+        tools:context=".activity.TaskManagementActivity">
+
+        <RelativeLayout
+            android:id="@+id/s"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            >
+
+            <RelativeLayout
+                android:id="@+id/fr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ff252e39"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.Toolbar
+                    app:titleTextColor="@color/white"
+                    android:id="@+id/toolBarMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize">
+
+                </androidx.appcompat.widget.Toolbar>
+                <FrameLayout
+                    android:layout_below="@+id/toolBarMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="18dp"
+                        android:background="#182128" />
+
+                    <com.gigamole.navigationtabstrip.NavigationTabStrip
+                        android:id="@+id/nts_center"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginRight="30dp"
+                        app:nts_active_color="#fff"
+                        app:nts_color="#3cdedd"
+                        app:nts_corners_radius="3.5dp"
+                        app:nts_factor="0.8"
+                        app:nts_gravity="bottom"
+                        app:nts_inactive_color="#81ffffff"
+                        app:nts_titles="@array/titles"
+                        app:nts_type="point"
+                        app:nts_typeface="fonts/moon.otf"
+                        app:nts_weight="7dp" />
+                </FrameLayout>
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/s"
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8" />
+
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="100dp"-->
+            <!--android:layout_below="@+id/s"-->
+            <!--android:id="@+id/containerFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+        <!--</LinearLayout>-->
+
+    </RelativeLayout>
+
+    <include layout="@layout/event_edit_add_layout" />
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

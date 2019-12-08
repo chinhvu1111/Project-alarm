@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <group android:checkableBehavior="single">
+        <!--<item-->
+            <!--android:id="@+id/action_today"-->
+            <!--android:icon="@drawable/ic_today_24"-->
+            <!--android:title="@string/action_today" />-->
+        <item
+            android:id="@+id/action_day_view"
+            android:icon="@drawable/ic_day_by_day"
+            android:title="@string/action_today" />
+        <item
+            android:id="@+id/action_three_day_view"
+            android:checked="true"
+            android:icon="@drawable/ic_three_days"
+            android:title="@string/action_three_day_view" />
+        <item
+            android:id="@+id/action_week_view"
+            android:icon="@drawable/ic_week_days"
+            android:title="@string/action_week_view" />
+    </group>
+</menu>

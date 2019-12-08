@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/chooseDate"
+        android:background="@drawable/background_choose_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+        <ImageView
+            android:id="@+id/previousWeek"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_left_black_24dp"
+            android:layout_gravity="center"
+            />
+        <LinearLayout
+            android:layout_gravity="center"
+            android:id="@+id/dateLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/date_time_text_color"
+                android:textSize="20sp"
+                android:layout_margin="3dp"
+                android:textStyle="bold"
+                android:text="No"/>
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/date_time_text_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="6dp"
+                android:text="19"/>
+            <TextView
+                android:id="@+id/year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/date_time_text_color"
+                android:textSize="20sp"
+                android:text="2020"/>
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/nextWeek"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right_black_24dp"
+            />
+    </LinearLayout>
+    <lecho.lib.hellocharts.view.ColumnChartView
+        android:layout_below="@+id/lnSwitchTimer"
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </lecho.lib.hellocharts.view.ColumnChartView>
+    <LinearLayout
+        android:layout_below="@+id/chooseDate"
+        android:id="@+id/lnSwitchTimer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <RadioGroup
+            android:checkedButton="@+id/rdWorkingTime"
+            android:id="@+id/toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/control_switch_background_border"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="3dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:id="@+id/rdWorkingTime"
+                android:background="@drawable/control_switch_background_selector_middle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Thời gian làm việc"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/control_switch_color_selector"/>
+            <RadioButton
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="3dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:id="@+id/rdRemainingTime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/control_switch_background_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Thời gian còn lại"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/control_switch_color_selector" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+</RelativeLayout>
