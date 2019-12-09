@@ -61,9 +61,9 @@ class TimerActivity : BaseActivityPomodoro(), PomodoroFragment.PomodoroListener 
 
         currentTask=task
 
-        tempId=currentTask.hashId
-
         task.fromIntent(dataIntent);
+
+        tempId=task.hashId
 
         intent.setAction(action)
 
@@ -155,6 +155,11 @@ class TimerActivity : BaseActivityPomodoro(), PomodoroFragment.PomodoroListener 
             task.toIntent(timerIntent);
 
             stopService(timerIntent)
+
+            var intent=Intent(this, RingtonePlayService::class.java)
+
+            stopService(intent)
+
         }
 
 //        var rsIntent=Intent();
@@ -166,9 +171,6 @@ class TimerActivity : BaseActivityPomodoro(), PomodoroFragment.PomodoroListener 
 //        setResult(Activity.RESULT_OK,rsIntent)
 //
 //        finish();
-        var intent=Intent(this, RingtonePlayService::class.java)
-
-        stopService(intent)
 
         super.onDestroy()
 
@@ -190,6 +192,13 @@ class TimerActivity : BaseActivityPomodoro(), PomodoroFragment.PomodoroListener 
             task.toIntent(timerIntent);
 
             stopService(timerIntent)
+
+            //Just only stop music when backpressed but not backpress in SettingPomodoro Activity
+            //stop music
+            var intent=Intent(this, RingtonePlayService::class.java)
+
+            stopService(intent)
+
         }
 
         var rsIntent:Intent=Intent();
@@ -227,11 +236,6 @@ class TimerActivity : BaseActivityPomodoro(), PomodoroFragment.PomodoroListener 
         remainingTime=0
 
         startActivity(rsIntent)
-
-        //stop music
-        var intent=Intent(this, RingtonePlayService::class.java)
-
-        stopService(intent)
 
         this.recreate()
 

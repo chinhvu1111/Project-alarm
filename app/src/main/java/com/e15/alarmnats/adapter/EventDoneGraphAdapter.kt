@@ -34,7 +34,7 @@ class EventDoneGraphAdapter: RecyclerView.Adapter<ViewHolderEventDoneGraph>() {
 
         var event=listEventState.get(position)
 
-        holder.id.setText(event.requestCode)
+        holder.id.setText(event.requestCode.toString())
 
         holder.dayOfWeek.setText(event.date)
 

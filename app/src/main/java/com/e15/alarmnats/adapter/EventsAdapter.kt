@@ -52,6 +52,8 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
     lateinit var eventDatabase:DatabaseReference
 
+    lateinit var categoryDatabase:DatabaseReference
+
     init {
 
         //Outer class of (this class) must implement (HideOrShowListener interface)
@@ -66,6 +68,8 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         firebaseDatabase= FirebaseDatabase.getInstance()
 
         eventDatabase=firebaseDatabase.getReference("Events")
+
+        categoryDatabase=firebaseDatabase.getReference("Category")
 
     }
 
@@ -484,6 +488,10 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                     dbHandler.removeCategory(item.hashIdCategory, item.title!!)
 
+                    //Removing category from Realtime database
+                    categoryDatabase.child("${item.hashIdCategory}").removeValue()
+
+                    //Updating here to refresh all RecycleView
                     categoryFragment.refreshAfterRemovedCategory()
 
                     //This code maybe occur fail

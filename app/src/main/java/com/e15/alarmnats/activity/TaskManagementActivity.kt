@@ -173,7 +173,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
     lateinit var groupDatabase:DatabaseReference
 
-    lateinit var currentUser:FirebaseUser
+    var currentUser:FirebaseUser?=null
 
     lateinit var queryGetIdUser:Query
 
@@ -189,13 +189,27 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
         eventDatabase=firebaseDatabase.getReference("Events")
 
         //Nested listener event into returned Thread
-        currentUser= FirebaseAuth.getInstance().currentUser!!
+        currentUser= FirebaseAuth.getInstance().currentUser
+
+        if(currentUser==null){
+
+            Toast.makeText(applicationContext,"Bạn chưa đăng nhập",Toast.LENGTH_SHORT).show()
+
+            var intent=Intent(this,LoginActivity::class.java)
+
+            startActivity(intent)
+
+            finish()
+
+            return
+
+        }
 
         databaseUser=firebaseDatabase.getReference("User")
 
         databaseEvents=firebaseDatabase.getReference("Events")
 
-        queryGetIdUser=databaseUser.orderByChild("email").equalTo(currentUser!!.email)
+        queryGetIdUser=databaseUser.orderByChild("email").equalTo(currentUser?.email)
 
         groupDatabase=firebaseDatabase.getReference("Group")
 
@@ -1448,39 +1462,18 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
                 //Assigning hashId for new event
                 //Using realtime database
-                updatingRealtimedatabase(e)
+                createEventRealtimedatabase(e)
 
                 listenerRealtimeDatabase()
 
                 //Row is the number of tuples that is similar to (requestCode)
-                val row = dbHandler!!.createNewEvent(e)
+//                val row = dbHandler!!.createNewEvent(e)
 
                 //Reset currentCreatingRemainingTimer to 0 value
                 currentCreatingRemainingTimer = -1
 
                 //This here reference to another scope
                 currentParentId=""
-
-                Log.i("Row", row.toString() + "")
-
-                Utils.showToastMessage("Lưu tác vụ thành công", applicationContext)
-
-                categoryFragment!!.refresh(Event(0,e.title!!, "", Event.EVENT_TYPE, false, 0))
-
-                allEventsFragment!!.refreshEvents()
-
-                if (e.notify.equals("on")) {
-                    if (e.repeatMode.equals("on")) {
-
-                        callBroadcastReceiver(row, REPEAT_MODE_ON,e.hashId)
-
-                    } else {
-
-                        callBroadcastReceiver(row, REPEAT_MODE_OFF,e.hashId)
-
-                    }
-
-                }
 
                 intervalhour.text="0"
                 intervalminute.text="0"
@@ -1736,41 +1729,16 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                 currentCreatingRemainingTimer = -1
                 currentParentId=""
 
-                //Updating event
-                val row = dbHandler!!.updateEvent(event)
+                updatingRealtimedatabase(event)
+
+                listenerRealtimeDatabase()
 
                 //Updating (general even)
                 //All information
-                eventDatabase.child("${event.hashId}").setValue(event)
-
-                Utils.showToastMessage("Lưu tác vụ thành công!", applicationContext)
-
-                categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
-
-                allEventsFragment!!.refreshEvents()
-                //refresh adapter based on current fragment
-//                if (currentFragment == "CategoryFragment") {
-//                    categoryFragment!!.refresh(Item(event.title!!, "", Event.EVENT_TYPE, false))
-//                } else {
-//                    allEventsFragment!!.refreshEvents()
-//                }
-                //cancel old alarm
-                receiver!!.cancelAlarm(applicationContext, event.requestCode)
+//                eventDatabase.child("${event.hashId}").setValue(event)
 
                 intervalhour.text="0"
                 intervalminute.text="0"
-
-                //notify alarm
-                if (event.notify.equals("on")) {
-                    if (event.repeatMode.equals("on")) {
-                        callBroadcastReceiver(event.requestCode, REPEAT_MODE_ON,event.hashId)
-                    } else {
-                        callBroadcastReceiver(event.requestCode, REPEAT_MODE_OFF,event.hashId)
-                    }
-                }
-
-                Log.i("ID", event.hashId + "  event.getId")
-                Log.i("ID", "$row  row")
 
             }
 
@@ -1816,7 +1784,39 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
                     mhandler.sendMessage(message)
 
-                    databaseEvents.child(idRt!!).setValue(eventFb)
+                    //Updating hashIdUser for old Event
+                    event.hashIdUser=data.key.toString()
+
+                    eventDatabase.child("${event.hashId}").setValue(event)
+
+                    //Updating event
+                    val row = dbHandler!!.updateEvent(event)
+
+                    Utils.showToastMessage("Lưu tác vụ thành công!", applicationContext)
+
+                    categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
+
+                    allEventsFragment!!.refreshEvents()
+                    //refresh adapter based on current fragment
+//                if (currentFragment == "CategoryFragment") {
+//                    categoryFragment!!.refresh(Item(event.title!!, "", Event.EVENT_TYPE, false))
+//                } else {
+//                    allEventsFragment!!.refreshEvents()
+//                }
+                    //cancel old alarm
+                    receiver!!.cancelAlarm(applicationContext, event.requestCode)
+
+                    //notify alarm
+                    if (event.notify.equals("on")) {
+                        if (event.repeatMode.equals("on")) {
+                            callBroadcastReceiver(event.requestCode, REPEAT_MODE_ON,event.hashId)
+                        } else {
+                            callBroadcastReceiver(event.requestCode, REPEAT_MODE_OFF,event.hashId)
+                        }
+                    }
+
+                    Log.i("ID", event.hashId + "  event.getId")
+                    Log.i("ID", "$row  row")
 
                 }
 
@@ -1827,6 +1827,71 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
             })
         }).start();
 
+    }
+
+    fun createEventRealtimedatabase(event:Event){
+        Thread(Runnable {
+
+            //The generated (key of Events)
+            var idRt=databaseEvents.push().key
+
+            event.hashId=idRt!!
+
+            queryGetIdUser.addListenerForSingleValueEvent(object:ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    var eventFb=EventFb(event)
+
+                    //Getting key of event
+                    eventFb.hashId=idRt!!
+
+                    //This is key group
+                    var data=p0.children.iterator().next()
+
+                    //Getting (the key of user)
+                    eventFb.hashIdUser=data.key!!
+
+                    var message=Message()
+
+                    message.what=0
+
+                    mhandler.sendMessage(message)
+
+                    databaseEvents.child(idRt!!).setValue(eventFb)
+
+                    event.hashIdUser=data.key.toString()
+
+                    val row = dbHandler!!.createNewEvent(event)
+
+                    Log.i("Row", row.toString() + "")
+
+                    Utils.showToastMessage("Lưu tác vụ thành công", applicationContext)
+
+                    categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
+
+                    allEventsFragment!!.refreshEvents()
+
+                    if (event.notify.equals("on")) {
+                        if (event.repeatMode.equals("on")) {
+
+                            callBroadcastReceiver(row, REPEAT_MODE_ON,event.hashId)
+
+                        } else {
+
+                            callBroadcastReceiver(row, REPEAT_MODE_OFF,event.hashId)
+
+                        }
+
+                    }
+
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+            })
+        }).start();
     }
 
     fun listenerRealtimeDatabase(){
@@ -1848,6 +1913,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
     override fun onInserted(item: Event) {
 //        tvEdit.text = "Edit"
         categoryFragment!!.refresh(item)
+
     }
 
     override fun refreshAllEventFragment(){

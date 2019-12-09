@@ -48,6 +48,8 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
 
                 category.type= Category.CATEGORY_TYPE
 
+                category.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
+
                 categories.add(category)
 
                 c.moveToNext()
@@ -92,13 +94,18 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
                 event.levelRecusion=c.getInt(c.getColumnIndex("recursiveLevel"))
                 event.remainingTime=c.getLong(c.getColumnIndex("remainingTime"))
                 event.requestCode=c.getInt(c.getColumnIndex("requestCode"))
+                event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
                 for (category in categories) {
                     if (event.category.equals(category.title)) {
                         event.color=category.color
+
+                        //Put code here solve case
+                        // that event has'n category (category is not in database)
+                        events.add(event)
+
                     }
                 }
 
-                events.add(event)
                 c.moveToNext()
             }
             db!!.close()
@@ -115,7 +122,8 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
 
         val eventTable = "CREATE TABLE IF NOT EXISTS " + TV_EVENT + "(hashId TEXT," +
                 "Title TEXT,Description TEXT,Place TEXT,StartTime TEXT, EndTime TEXT, Enabled INTEGER,Date TEXT,Category TEXT,Notify TEXT, RepeatType TEXT" +
-                ", RepeatNumber TEXT, RepeatMode TEXT, isDone INTEGER, isUrgent INTEGER, isImportant INTEGER, remainingTime LONG, parentId TEXT, recursiveLevel INTEGER, " +
+                ", RepeatNumber TEXT, RepeatMode TEXT, isDone INTEGER, isUrgent INTEGER, isImportant INTEGER, remainingTime LONG, parentId TEXT, recursiveLevel INTEGER," +
+                "hashIdUser TEXT, " +
                 "requestCode INTEGER PRIMARY KEY AUTOINCREMENT)"
 
         db.execSQL(eventTable)
@@ -163,6 +171,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
             event.parentId=c.getString(c.getColumnIndex("parentId"))
             event.levelRecusion=c.getInt(c.getColumnIndex("recursiveLevel"))
             event.requestCode=c.getInt(c.getColumnIndex("requestCode"))
+            event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
             events.add(event)
             c.moveToNext()
         }
@@ -194,6 +203,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
         cv.put("remainingTime",event.remainingTime)
         cv.put("parentId",event.parentId)
         cv.put("recursiveLevel",event.levelRecusion)
+        cv.put("hashIdUser",event.hashIdUser)
         val id = db!!.insert(TV_EVENT, null, cv)
         db!!.close()
         return id.toInt()
@@ -351,6 +361,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
             event.parentId=c.getString(c.getColumnIndex("parentId"))
             event.levelRecusion=c.getInt(c.getColumnIndex("recursiveLevel"))
             event.requestCode=c.getInt(c.getColumnIndex("requestCode"))
+            event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
         }
         db!!.close()
         return event
@@ -387,6 +398,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
             event.parentId=c.getString(c.getColumnIndex("parentId"))
             event.levelRecusion=c.getInt(c.getColumnIndex("recursiveLevel"))
             event.requestCode=c.getInt(c.getColumnIndex("requestCode"))
+            event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
             for (category in categories) {
                 if (event.category.equals(category.title)) {
                     event.color=category.color
@@ -443,6 +455,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
             event.remainingTime=c.getLong(c.getColumnIndex("remainingTime"))
             event.isDone=c.getInt(c.getColumnIndex("isDone"));
             event.requestCode=c.getInt(c.getColumnIndex("requestCode"))
+            event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
 
             if(event.isDone==1){
 
@@ -597,6 +610,7 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
                 event.category=cat
                 event.isShow=false
                 event.remainingTime=c.getLong(c.getColumnIndex("remainingTime"))
+                event.hashIdUser=c.getString(c.getColumnIndex("hashIdUser"))
                 for (category in categories) {
                     if (event.category.equals(category.title)) {
                     }

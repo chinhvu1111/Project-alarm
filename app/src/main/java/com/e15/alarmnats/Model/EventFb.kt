@@ -2,7 +2,7 @@ package com.e15.alarmnats.Model
 
 class EventFb{
     var hashId:String=""
-    lateinit var hashIdUser:String
+    var hashIdUser:String=""
     var title: String? = null
     var description: String? = null
     var place: String? = null
@@ -45,6 +45,7 @@ class EventFb{
     constructor(event:Event){
 
         hashId=event.hashId
+        hashIdUser=event.hashIdUser
         title=event.title
         description=event.description
         place=event.place

@@ -3,12 +3,20 @@ package com.e15.alarmnats
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
+import com.e15.alarmnats.Database.ReminderDatabase
+import com.e15.alarmnats.Model.Category
+import com.e15.alarmnats.Model.Event
+import com.e15.alarmnats.Model.EventFb
 import com.e15.alarmnats.activity.*
 import com.e15.alarmnats.activity.TaskManagementActivity
+import com.google.firebase.database.*
+import java.io.File
 
 class Main_AlarmActivity : AppCompatActivity() {
 
@@ -28,9 +36,70 @@ class Main_AlarmActivity : AppCompatActivity() {
 
     lateinit var layoutGroup:RelativeLayout
 
+    lateinit var firebaseDatabase:FirebaseDatabase
+
+    lateinit var eventDatabase:DatabaseReference
+
+    lateinit var categoryDatabase:DatabaseReference
+
+    lateinit var dbHandler:ReminderDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_alarm)
+
+        dbHandler= ReminderDatabase(applicationContext)
+
+        firebaseDatabase= FirebaseDatabase.getInstance()
+
+        eventDatabase=firebaseDatabase.getReference("Events")
+
+        categoryDatabase=firebaseDatabase.getReference("Category")
+
+        if(!checkDatabase()){
+
+            categoryDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    for(ca in p0.children){
+
+                        var category=ca.getValue(Category::class.java)
+
+                        dbHandler.createNewCategory(category!!)
+
+                    }
+
+                }
+            })
+
+            eventDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    for(e in p0.children){
+
+                        var eventFb=e.getValue(EventFb::class.java)
+
+                        var event=Event(eventFb!!,eventFb!!.levelRecusion)
+
+                        dbHandler.createNewEvent(event)
+
+                    }
+
+                }
+
+            })
+
+            Toast.makeText(applicationContext,"Đồng bộ cơ sở dữ liệu thành công!",Toast.LENGTH_SHORT).show()
+
+        }
 
         layoutRemindItem = findViewById(R.id.layoutRemindItem)
 
@@ -111,6 +180,21 @@ class Main_AlarmActivity : AppCompatActivity() {
         DrawableCompat.setTint(wrapperDrawable8, resources.getColor(R.color.colorMintDark))
 
         layoutGroup.background = wrapperDrawable8
+
+    }
+
+    fun checkDatabase(): Boolean {
+
+        val path = "/data/data/com.e15.alarmnats/databases/"
+
+        val filename = "Remind"
+
+        //Check (the file database)
+        val file = File(path + filename)
+
+        Log.d("", "Cơ sở dữ liệu tồn tại? -> " + file.exists())
+
+        return file.exists()
 
     }
 

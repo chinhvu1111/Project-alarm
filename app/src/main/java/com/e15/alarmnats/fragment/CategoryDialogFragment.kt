@@ -18,6 +18,7 @@ import com.e15.alarmnats.Model.Category
 import com.e15.alarmnats.Model.NotifyInterface
 import com.e15.alarmnats.Database.ReminderDatabase
 import com.e15.alarmnats.Model.Event
+import com.e15.alarmnats.Model.EventFb
 import com.e15.alarmnats.R
 import com.e15.alarmnats.adapter.ColorsAdapter
 import com.e15.alarmnats.utils.Utils
@@ -187,7 +188,7 @@ class CategoryDialogFragment : DialogFragment() {
 
             if (text.length == 0 && isError) {
 
-                inputText!!.error = "Name Invalid"
+                inputText!!.error = "Tên không hợp lệ"
 
                 isError = true
 
@@ -266,23 +267,32 @@ class CategoryDialogFragment : DialogFragment() {
                             //category.title is the (old title)
                             res = dbHandler.updateCategory(category!!.hasIdCategory, title, colors[pos].name!!, category!!.title)
 
-                            var category=Category(category!!.hasIdCategory,category!!.title,colors[pos].name!!)
+                            var data=p0.children.iterator().next()
+
+                            var idCurrentUser=data.child("hashId").value.toString()
+
+                            var newCategory=Category(category!!.hasIdCategory,title,colors[pos].name!!,idCurrentUser)
 
                             //Updating category by using object
-                            categoryDatabase.ref.child(category!!.hasIdCategory).setValue(category)
+                            categoryDatabase.ref.child(newCategory!!.hasIdCategory).setValue(newCategory)
 
                             Utils.showToastMessage("Category Edited", this@CategoryDialogFragment!!.context!!)
 
-                            //get all events and change category
+                            //This database need to add HashIdUser
+                            //get all events having (old title)
                             val items = dbHandler.getItemByCategory(category!!.title)
 
                             for (event in items) {
+
                                 event.category = title
 
                                 dbHandler.updateItem(event)
 
+                                //Converting
+                                var eventFb=EventFb(event)
+
                                 //Udating events from realtime database
-                                databaseEvent.ref.child(event.hashId).setValue(event)
+                                databaseEvent.ref.child(event.hashId).setValue(eventFb)
 
                             }
 

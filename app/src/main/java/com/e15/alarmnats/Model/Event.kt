@@ -27,7 +27,7 @@ open class Event:RecyclerViewItem {
 
     var isImportant:Boolean = false
 
-    lateinit var level:String
+    var level:String=""
 
     var remainingTime:Long = 0
 

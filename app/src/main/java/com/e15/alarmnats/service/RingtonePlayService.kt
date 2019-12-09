@@ -6,6 +6,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import com.e15.alarmnats.R
 
 class RingtonePlayService: Service() {
 
@@ -30,8 +31,12 @@ class RingtonePlayService: Service() {
 
         var uri=sharedPreferences.getInt("tune",0)
 
-        media_song= MediaPlayer.create(applicationContext,uri)
+        if(uri!=0) media_song= MediaPlayer.create(applicationContext,uri)
+        else{
 
+            media_song= MediaPlayer.create(applicationContext,R.raw.silver_flame)
+
+        }
         super.onCreate()
     }
 

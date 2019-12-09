@@ -42,7 +42,7 @@ class CategoryFragment : Fragment() {
 
     private var tv_show_message: TextView? = null
 
-    lateinit var firebaseDatabase:FirebaseDatabase
+    lateinit var firebaseDatabase: FirebaseDatabase
 
     lateinit var eventDatabase: DatabaseReference
 
@@ -60,96 +60,85 @@ class CategoryFragment : Fragment() {
 
     lateinit var queryGetIdUser: Query
 
-    lateinit var groupArrayAdapter:ArrayAdapter<String>
+    lateinit var groupArrayAdapter: ArrayAdapter<String>
 
-    lateinit var databaseEvents:DatabaseReference
+    lateinit var databaseEvents: DatabaseReference
 
-    lateinit var categoryDatabase:DatabaseReference
+    lateinit var categoryDatabase: DatabaseReference
 
-    lateinit var selectedCurrentMemberHashId:String
+    lateinit var selectedCurrentMemberHashId: String
 
     //this (field) is used in (local location of this file)
-    var currentHashId:String=""
+    var currentHashId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseDatabase= FirebaseDatabase.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
 
-        eventDatabase=firebaseDatabase.getReference("Events")
+        eventDatabase = firebaseDatabase.getReference("Events")
 
-        categoryDatabase=FirebaseDatabase.getInstance().getReference("Category")
+        categoryDatabase = FirebaseDatabase.getInstance().getReference("Category")
 
         //Nested listener event into returned Thread
-        currentUser= FirebaseAuth.getInstance().currentUser!!
+        currentUser = FirebaseAuth.getInstance().currentUser!!
 
-        databaseUser=firebaseDatabase.getReference("User")
+        databaseUser = firebaseDatabase.getReference("User")
 
-        databaseEvents=firebaseDatabase.getReference("Events")
+        databaseEvents = firebaseDatabase.getReference("Events")
 
-        queryGetIdUser=databaseUser.orderByChild("email").equalTo(currentUser!!.email)
+        queryGetIdUser = databaseUser.orderByChild("email").equalTo(currentUser!!.email)
 
-        groupDatabase=firebaseDatabase.getReference("Group")
+        groupDatabase = firebaseDatabase.getReference("Group")
 
         dbHandler = ReminderDatabase(this!!.context!!)
 
     }
 
     //return all item (in the database)
-    fun fillAllItems(isEdit: Boolean,currentUserId:String): ArrayList<Event> {
+    fun fillAllItems(isEdit: Boolean, currentUserId: String, tempAllItems: ArrayList<Event>): ArrayList<Event> {
 
-        var connectRef=firebaseDatabase.getReference(".info/connected")
+        var connectRef = firebaseDatabase.getReference(".info/connected")
 
-        connectRef.addListenerForSingleValueEvent(object:ValueEventListener{
+        connectRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                var connected=p0.getValue(Boolean::class.java)
+                var connected = p0.getValue(Boolean::class.java)
 
-                if(connected!!){
+                if (connected!!) {
 
                     //Firstly, creating new empty ArrayList<Item>
                     val allItemsEm = ArrayList<Event>()
 
                     //Getting category from realtime database
-                    categoryDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
+                    categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
 
                         }
 
                         override fun onDataChange(p0: DataSnapshot) {
 
-                            var isNullAllitems:Boolean=false
+                            var isNullAllitems: Boolean = false
 
-                            if(allItems!=null&&allItems.size!=0){
+                            //isNullAllitems field is check whether allitem is empty
+                            if (tempAllItems != null && tempAllItems.size != 0) {
 
-                                isNullAllitems=true
-
-                                adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment,recyclerView)
-
-                                recyclerView!!.layoutManager = LinearLayoutManager(activity)
-
-                                recyclerView!!.adapter = adapter
-
-                                recyclerView.setToggleItemOnClick(false)
-
-                                recyclerView.setAccordion(false)
-
-                                recyclerView.openTill(0,1,2,3)
+                                isNullAllitems = true
 
                             }
 
-                            categories= ArrayList()
+                            categories = ArrayList()
 
                             //This code is used to for getting (all categories)
-                            if(p0.hasChildren()){
+                            if (p0.hasChildren()) {
 
-                                for(c in p0.children){
+                                for (c in p0.children) {
 
-                                    var category=c.getValue(Category::class.java)
+                                    var category = c.getValue(Category::class.java)
 
                                     categories!!.add(category!!)
 
@@ -158,7 +147,7 @@ class CategoryFragment : Fragment() {
                             }
 
                             //Filter elements having
-                            categories=categories!!.filter { it.hashIdUser.equals(currentUserId) } as ArrayList<Category>
+                            categories = categories!!.filter { it.hashIdUser.equals(currentUserId) } as ArrayList<Category>
 
                             //This code execute operation (add childs to allitems list)
                             //Looping for (All categories)
@@ -168,18 +157,19 @@ class CategoryFragment : Fragment() {
 
                                 //Build a (CategoryItem) base (Category) (at index)
                                 //Note that: This item has (CATEGORY_TYPE)
-                                val categoryItem = Event(0, category.title,Category.CATEGORY_TYPE,-2, category.hasIdCategory, isEdit, category.color)
+                                val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
 
                                 //Add item has CATEGORY_TYPE
-                                var loopingForAddingNewTypeEvent=ArrayList<Event>()
+                                var loopingForAddingNewTypeEvent = ArrayList<Event>()
 
                                 //This is solution for caculating working time wrong!
                                 loopingForAddingNewTypeEvent.add(categoryItem)
 
+                                //Using tempAllItems for (this)
                                 //Getting (all items) from database (corresponding category)
                                 // (has this cagory) in (the current loop)
-                                var events = allItems.filter {
-                                    (it.category==category.title)
+                                var events = tempAllItems.filter {
+                                    (it.category == category.title)
                                 }
 
 
@@ -188,17 +178,17 @@ class CategoryFragment : Fragment() {
                                     val e = events.get(j)
 
 
-                                    Log.e("--------doneOrNot",e.isDone.toString())
+                                    Log.e("--------doneOrNot", e.isDone.toString())
 
-                                    val eventItem = Event(e.hashId,0, e.title!!, e.description!!, e.place!!,
-                                            e.category!!, e.startTime!!,e.endTime, e.date!!,
+                                    val eventItem = Event(e.hashId, 0, e.title!!, e.description!!, e.place!!,
+                                            e.category!!, e.startTime!!, e.endTime, e.date!!,
                                             e.isShow!!, Event.EVENT_TYPE, e.notify!!, e.repeatMode!!,
-                                            e.repeatCount!!,e.repeatType!!,0,categoryItem.color!!)
+                                            e.repeatCount!!, e.repeatType!!, 0, categoryItem.color!!)
 
-                                    eventItem.isDone=e.isDone
-                                    eventItem.remainingTime=e.remainingTime
-                                    eventItem.levelRecusion=e.levelRecusion
-                                    eventItem.parentId=e.parentId
+                                    eventItem.isDone = e.isDone
+                                    eventItem.remainingTime = e.remainingTime
+                                    eventItem.levelRecusion = e.levelRecusion
+                                    eventItem.parentId = e.parentId
                                     eventItem.addChildren(e.children)
 
                                     loopingForAddingNewTypeEvent.add(eventItem)
@@ -206,15 +196,15 @@ class CategoryFragment : Fragment() {
                                 }
 
                                 //Add child but displaying base on (levelRecusion) of (the corresponding node)
-                                recusiveListEvent(loopingForAddingNewTypeEvent as ArrayList<Event>,0)
+                                recusiveListEvent(loopingForAddingNewTypeEvent as ArrayList<Event>, 0)
 
-                                var tempEvents=ArrayList<Event>()
+                                var tempEvents = ArrayList<Event>()
 
                                 //All node have recustion==0 --> is added to allItems
                                 //Category has (levelRecursion==-2)
-                                for(e in loopingForAddingNewTypeEvent){
+                                for (e in loopingForAddingNewTypeEvent) {
 
-                                    if(e.parentId.equals("")||e.levelRecusion==-2){
+                                    if (e.parentId.equals("") || e.levelRecusion == -2) {
 
                                         tempEvents.add(e)
 
@@ -228,20 +218,30 @@ class CategoryFragment : Fragment() {
 
                             allItems.addAll(allItemsEm)
 
-                            if(isNullAllitems){
+                            categories!!.clear()
 
-                                adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment,recyclerView)
+                            if (isNullAllitems) {
 
-                                recyclerView!!.layoutManager = LinearLayoutManager(activity)
+                                Log.e("Size of allitems", allItems.size.toString())
 
-                                recyclerView!!.adapter = adapter
+                                if (adapter == null) {
 
-                                recyclerView.setToggleItemOnClick(false)
+                                    adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment, recyclerView)
 
-                                recyclerView.setAccordion(false)
+                                    recyclerView!!.layoutManager = LinearLayoutManager(activity)
 
-                                recyclerView.openTill(0,1,2,3)
-                            }else{
+                                    recyclerView!!.adapter = adapter
+
+                                    recyclerView.setToggleItemOnClick(false)
+
+                                    recyclerView.setAccordion(false)
+
+                                    recyclerView.openTill(0, 1, 2, 3)
+
+                                }else{
+                                    adapter!!.notifyDataSetChanged()
+                                }
+                            } else {
 
                                 adapter!!.notifyDataSetChanged()
 
@@ -251,9 +251,9 @@ class CategoryFragment : Fragment() {
 
                     })
 
-                }else{
+                } else {
 
-                    adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment,recyclerView)
+                    adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment, recyclerView)
 
                     recyclerView!!.layoutManager = LinearLayoutManager(activity)
 
@@ -263,7 +263,7 @@ class CategoryFragment : Fragment() {
 
                     recyclerView.setAccordion(false)
 
-                    recyclerView.openTill(0,1,2,3)
+                    recyclerView.openTill(0, 1, 2, 3)
 
                     //Firstly, creating new empty ArrayList<Item>
                     val allItemsEm = ArrayList<Event>()
@@ -278,7 +278,7 @@ class CategoryFragment : Fragment() {
 
                         //Build a (CategoryItem) base (Category) (at index)
                         //Note that: This item has (CATEGORY_TYPE)
-                        val categoryItem = Event(0, category.title,Category.CATEGORY_TYPE,-2, category.hasIdCategory, isEdit, category.color)
+                        val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
 
                         //Add item has CATEGORY_TYPE
                         allItemsEm.add(categoryItem)
@@ -287,35 +287,35 @@ class CategoryFragment : Fragment() {
                         // (has this cagory) in (the current loop)
                         var events = dbHandler!!.getEventsByCategory(category.title)
 
-                        var tempEvents=ArrayList<Event>()
+                        var tempEvents = ArrayList<Event>()
 
                         for (j in events.indices) {
 
                             val e = events.get(j)
 
-                            Log.e("--------doneOrNot",e.isDone.toString())
+                            Log.e("--------doneOrNot", e.isDone.toString())
 
-                            val eventItem = Event(e.hashId,0, e.title!!, e.description!!, e.place!!,
-                                    e.category!!, e.startTime!!,e.endTime, e.date!!,
+                            val eventItem = Event(e.hashId, 0, e.title!!, e.description!!, e.place!!,
+                                    e.category!!, e.startTime!!, e.endTime, e.date!!,
                                     e.isShow!!, Event.EVENT_TYPE, e.notify!!, e.repeatMode!!,
-                                    e.repeatCount!!,e.repeatType!!,0,categoryItem.color!!)
+                                    e.repeatCount!!, e.repeatType!!, 0, categoryItem.color!!)
 
-                            eventItem.isDone=e.isDone
-                            eventItem.remainingTime=e.remainingTime
-                            eventItem.levelRecusion=e.levelRecusion
-                            eventItem.parentId=e.parentId
+                            eventItem.isDone = e.isDone
+                            eventItem.remainingTime = e.remainingTime
+                            eventItem.levelRecusion = e.levelRecusion
+                            eventItem.parentId = e.parentId
                             eventItem.addChildren(e.children)
                             allItemsEm.add(eventItem)
                         }
 
                         //Add child but displaying base on (levelRecusion) of (the corresponding node)
-                        recusiveListEvent(allItemsEm as ArrayList<Event>,0)
+                        recusiveListEvent(allItemsEm as ArrayList<Event>, 0)
 
                         //All node have recustion==0 --> is added to allItems
                         //Category has (levelRecursion==-2)
-                        for(e in allItemsEm){
+                        for (e in allItemsEm) {
 
-                            if(e.parentId.equals("")||e.levelRecusion==-2){
+                            if (e.parentId.equals("") || e.levelRecusion == -2) {
 
                                 tempEvents.add(e)
 
@@ -341,21 +341,21 @@ class CategoryFragment : Fragment() {
         return allItems
     }
 
-    fun recusiveListEvent(listEvents:ArrayList<Event>, level:Int){
+    fun recusiveListEvent(listEvents: ArrayList<Event>, level: Int) {
 
-        for(e in listEvents.indices){
+        for (e in listEvents.indices) {
 
-            if(listEvents.get(e).levelRecusion==level){
+            if (listEvents.get(e).levelRecusion == level) {
 
-                var listChilds:ArrayList<Event> =ArrayList<Event>()
+                var listChilds: ArrayList<Event> = ArrayList<Event>()
 
-                for(e1 in listEvents){
+                for (e1 in listEvents) {
 
                     //Reach (one node) then reachs (all orther nodes)
                     //If (any node) has (parenrId== node.id) --> Add child
-                    if(listEvents.get(e).hashId.equals(e1.parentId)&&e1.levelRecusion==level+1){
+                    if (listEvents.get(e).hashId.equals(e1.parentId) && e1.levelRecusion == level + 1) {
 
-                        recusiveListEvent(listEvents,level+1)
+                        recusiveListEvent(listEvents, level + 1)
 
                         listChilds.add(e1)
 
@@ -363,7 +363,7 @@ class CategoryFragment : Fragment() {
 
                 }
 
-                if(listChilds.size!=0) listEvents.get(e).addChildren(listChilds as List<RecyclerViewItem>?)
+                if (listChilds.size != 0) listEvents.get(e).addChildren(listChilds as List<RecyclerViewItem>?)
 
             }
 
@@ -388,7 +388,7 @@ class CategoryFragment : Fragment() {
 
         //Filling (all items) to (the adapter)
         try {
-            adapter = EventsAdapter(this!!.context!!, allItems, this,recyclerView)
+            adapter = EventsAdapter(this!!.context!!, allItems, this, recyclerView)
 
             recyclerView!!.layoutManager = LinearLayoutManager(activity)
 
@@ -398,65 +398,65 @@ class CategoryFragment : Fragment() {
 
             recyclerView.setAccordion(false)
 
-            recyclerView.openTill(0,1,2,3)
+            recyclerView.openTill(0, 1, 2, 3)
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
 //            activity!!.recreate()
 
-            Toast.makeText(activity!!.applicationContext,"Danh sách trống", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity!!.applicationContext, "Danh sách trống", Toast.LENGTH_SHORT).show()
 
         }
 
         //show create event message
         showCreateEventMessage()
 
-        lnfilterGroup=v.findViewById(R.id.lnfilterGroup)
+        lnfilterGroup = v.findViewById(R.id.lnfilterGroup)
 
 //        lnfilterGroup.isVisible=false
 //
 //        lnfilterGroup.isClickable=false
 
-        spnGroup=v.findViewById(R.id.spnGroup)
+        spnGroup = v.findViewById(R.id.spnGroup)
 
-        spnMember=v.findViewById(R.id.spnMember)
+        spnMember = v.findViewById(R.id.spnMember)
 
-        var listGroup=ArrayList<String>()
+        var listGroup = ArrayList<String>()
 
-        var listMember=ArrayList<User>()
+        var listMember = ArrayList<User>()
 
-        var listEmailMember=ArrayList<String>()
+        var listEmailMember = ArrayList<String>()
 
-        groupArrayAdapter= ArrayAdapter(activity!!.applicationContext,android.R.layout.simple_spinner_dropdown_item,listGroup)
+        groupArrayAdapter = ArrayAdapter(activity!!.applicationContext, android.R.layout.simple_spinner_dropdown_item, listGroup)
 
-        spnGroup.adapter=groupArrayAdapter
+        spnGroup.adapter = groupArrayAdapter
 
-        var memberAdapter= ArrayAdapter(activity!!.applicationContext,android.R.layout.simple_spinner_dropdown_item,listEmailMember)
+        var memberAdapter = ArrayAdapter(activity!!.applicationContext, android.R.layout.simple_spinner_dropdown_item, listEmailMember)
 
-        spnMember.adapter=memberAdapter
+        spnMember.adapter = memberAdapter
 
-        var listKeyGroup=ArrayList<String>()
+        var listKeyGroup = ArrayList<String>()
 
-        queryGetIdUser.addValueEventListener(object: ValueEventListener {
+        queryGetIdUser.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
-                var data: DataSnapshot?=null
+                var data: DataSnapshot? = null
 
-                if(p0.children.iterator().hasNext()){
+                if (p0.children.iterator().hasNext()) {
 
-                    data=p0.children.iterator().next()
+                    data = p0.children.iterator().next()
 
                 }
 
-                currentHashId=data!!.child("hashId").value.toString()
+                currentHashId = data!!.child("hashId").value.toString()
 
-                var currentEmail=data.child("email").value.toString()
+                var currentEmail = data.child("email").value.toString()
 
-                if(data==null) return
+                if (data == null) return
 
-                var dataGroup=data!!.child("Group")
+                var dataGroup = data!!.child("Group")
 
-                for(tupleGroupOfUser in dataGroup.children){
+                for (tupleGroupOfUser in dataGroup.children) {
 
                     listKeyGroup.add(tupleGroupOfUser.key!!)
 
@@ -464,15 +464,15 @@ class CategoryFragment : Fragment() {
 
                 //Get all data in the group table data
                 // to (filter get (all key groups) that user has registered)
-                groupDatabase.addValueEventListener(object: ValueEventListener {
+                groupDatabase.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
 
-                        var groupIterative=p0.children
+                        var groupIterative = p0.children
 
-                        for(dataGroup in groupIterative){
+                        for (dataGroup in groupIterative) {
 
                             //Get keys of group containing listkeyGroup
-                            if(listKeyGroup.contains(dataGroup.key)){
+                            if (listKeyGroup.contains(dataGroup.key)) {
 
                                 //get value of child having (name path)
                                 listGroup.add(dataGroup.child("name").value.toString())
@@ -483,11 +483,11 @@ class CategoryFragment : Fragment() {
 
                         groupArrayAdapter.notifyDataSetChanged()
 
-                        var listCorresPondingKeyUser=ArrayList<String>()
+                        var listCorresPondingKeyUser = ArrayList<String>()
 
                         //When selecting your group you want to see members
                         //Updating member to spinner
-                        spnGroup.setOnItemSelectedListener(object: AdapterView.OnItemSelectedListener{
+                        spnGroup.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
                             override fun onNothingSelected(parent: AdapterView<*>?) {
 
                             }
@@ -497,19 +497,19 @@ class CategoryFragment : Fragment() {
                                 listCorresPondingKeyUser.clear()
 
                                 //Get (selected key group) from (spn)
-                                var selectedKeyGroup=listKeyGroup.get(position)
+                                var selectedKeyGroup = listKeyGroup.get(position)
 
-                                groupDatabase.addValueEventListener(object: ValueEventListener {
+                                groupDatabase.addValueEventListener(object : ValueEventListener {
                                     override fun onDataChange(p0: DataSnapshot) {
 
-                                        var dataTuples=p0.children
+                                        var dataTuples = p0.children
 
-                                        for(tuple in dataTuples){
+                                        for (tuple in dataTuples) {
 
                                             //It has only one case
-                                            if(tuple.key.equals(selectedKeyGroup)){
+                                            if (tuple.key.equals(selectedKeyGroup)) {
 
-                                                for(user in tuple.child("User").children){
+                                                for (user in tuple.child("User").children) {
 
                                                     //Getting (all key users) of (current group)
                                                     listCorresPondingKeyUser.add(user.key.toString())
@@ -520,7 +520,7 @@ class CategoryFragment : Fragment() {
 
                                         }
 
-                                        databaseUser.addListenerForSingleValueEvent(object: ValueEventListener {
+                                        databaseUser.addListenerForSingleValueEvent(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError) {
 
                                             }
@@ -531,15 +531,15 @@ class CategoryFragment : Fragment() {
 
                                                 listEmailMember.clear()
 
-                                                var users=p0.children
+                                                var users = p0.children
 
-                                                for(u in users){
+                                                for (u in users) {
 
-                                                    if(listCorresPondingKeyUser.contains(u.key)){
+                                                    if (listCorresPondingKeyUser.contains(u.key)) {
 
-                                                        var emailOfMember=u.child("email").value.toString()
+                                                        var emailOfMember = u.child("email").value.toString()
 
-                                                        listMember.add(User(u.key.toString(),emailOfMember))
+                                                        listMember.add(User(u.key.toString(), emailOfMember))
 
                                                         listEmailMember.add(emailOfMember)
 
@@ -547,21 +547,33 @@ class CategoryFragment : Fragment() {
 
                                                 }
 
-                                                var currentU=User(currentHashId,currentEmail)
+                                                var currentU = User(currentHashId, currentEmail)
+
+                                                var indexDelete=-1
+
+                                                for(u in listMember.indices){
+
+                                                    if(listMember.get(u).equals(currentHashId)) indexDelete=u
+
+                                                }
 
                                                 //Addinng position 0 (User)
-                                                listMember.remove(currentU)
+                                                if(indexDelete!=-1){
 
-                                                listMember.add(0,currentU)
+                                                    listMember.removeAt(indexDelete)
+
+                                                    listMember.add(0, currentU)
+
+                                                }
 
                                                 //Adding to position 0 (email)
                                                 listEmailMember.remove(currentEmail)
 
-                                                listEmailMember.add(0,currentEmail)
+                                                listEmailMember.add(0, currentEmail)
 
                                                 memberAdapter.notifyDataSetChanged()
 
-                                                spnMember.setOnItemSelectedListener(object: AdapterView.OnItemSelectedListener{
+                                                spnMember.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
                                                     override fun onNothingSelected(parent: AdapterView<*>?) {
 
                                                     }
@@ -569,41 +581,41 @@ class CategoryFragment : Fragment() {
                                                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                                                         //This field holds (hashId value) of (selected current member)
-                                                        selectedCurrentMemberHashId=listMember.get(position).hashId
+                                                        selectedCurrentMemberHashId = listMember.get(position).hashId
 
-                                                        currentHashId=selectedCurrentMemberHashId
+                                                        currentHashId = selectedCurrentMemberHashId
 
                                                         //In this case, we check fail although database hasn't tuple but even display as this
                                                         //Get all Event having (user) having (hashId) is similar to (selected user)
                                                         databaseEvents.ref.orderByChild("hashIdUser").equalTo(listMember.get(position).hashId)
 
-                                                        databaseEvents.addListenerForSingleValueEvent(object: ValueEventListener {
+                                                        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
                                                             override fun onCancelled(p0: DatabaseError) {
 
                                                             }
 
                                                             override fun onDataChange(p0: DataSnapshot) {
 
-                                                                if(p0.hasChildren()){
+                                                                if (p0.hasChildren()) {
 
                                                                     //Thís attribute is used to check whether Realtime database having (Events)
                                                                     //Corresponding to (Selected user)
                                                                     //Event has (hashIdUser)
-                                                                    var isExist=false
+                                                                    var isExist = false
 
-                                                                    var dataEvents=p0.children
+                                                                    var dataEvents = p0.children
 
                                                                     allItems.clear()
 
-                                                                    for(e in dataEvents){
+                                                                    for (e in dataEvents) {
 
-                                                                        if(e.child("hashIdUser").value!!.equals(listMember.get(position).hashId)){
+                                                                        if (e.child("hashIdUser").value!!.equals(listMember.get(position).hashId)) {
 
-                                                                            isExist=true
+                                                                            isExist = true
 
-                                                                            var eventFb=e.getValue(EventFb::class.java)
+                                                                            var eventFb = e.getValue(EventFb::class.java)
 
-                                                                            var event=Event(eventFb!!,eventFb!!.levelRecusion)
+                                                                            var event = Event(eventFb!!, eventFb!!.levelRecusion)
 
                                                                             allItems.add(event)
 
@@ -617,71 +629,13 @@ class CategoryFragment : Fragment() {
                                                                     // --> adapter is empty
                                                                     //Because in this case, adapter is not allowed empty because multuply level
                                                                     //==> Try catch when occuring fail out
-                                                                    if(isExist) fillAllItems(false,currentHashId)
-                                                                    else{
-                                                                        try {
-
-                                                                            categoryDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
-                                                                                override fun onCancelled(p0: DatabaseError) {
-
-                                                                                }
-
-                                                                                override fun onDataChange(p0: DataSnapshot) {
-
-                                                                                    categories=ArrayList()
-
-                                                                                    if (p0.hasChildren()) {
-
-                                                                                        for (c in p0.children) {
-
-                                                                                            var category = c.getValue(Category::class.java)
-
-                                                                                            categories!!.add(category!!)
-
-                                                                                        }
-
-                                                                                        //Filter elements having
-                                                                                        categories = categories!!.filter { it.hashIdUser.equals(currentHashId) } as ArrayList<Category>
-
-                                                                                        //This code execute operation (add childs to allitems list)
-                                                                                        //Looping for (All categories)
-                                                                                        for (i in categories!!.indices) {
-
-                                                                                            val category = categories!![i]
-
-                                                                                            //Build a (CategoryItem) base (Category) (at index)
-                                                                                            //Note that: This item has (CATEGORY_TYPE)
-                                                                                            val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, false, category.color)
-
-                                                                                            allItems.add(categoryItem)
-
-                                                                                        }
-
-                                                                                        adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment,recyclerView)
-
-                                                                                        recyclerView!!.layoutManager = LinearLayoutManager(activity)
-
-                                                                                        recyclerView!!.adapter = adapter
-
-                                                                                        recyclerView.setToggleItemOnClick(false)
-
-                                                                                        recyclerView.setAccordion(false)
-
-                                                                                        recyclerView.openTill(0,1,2,3)
-
-                                                                                    }
-
-                                                                                }
-
-                                                                            })
-
-                                                                        }catch (e:Exception){
-
-                                                                            Toast.makeText(activity!!.applicationContext,"Danh sách trống", Toast.LENGTH_SHORT).show()
-
-                                                                        }
+                                                                    if (isExist) fillAllItems(false, currentHashId, allItems)
+                                                                    else {
+                                                                        addOnlyCategoryToAllItems()
                                                                     }
 
+                                                                } else {
+                                                                    addOnlyCategoryToAllItems()
                                                                 }
 
                                                             }
@@ -730,7 +684,78 @@ class CategoryFragment : Fragment() {
         return v
     }
 
-    fun assignAdapterWhenAllItemsIsEmpty(){
+    fun addOnlyCategoryToAllItems() {
+        try {
+
+            categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    categories = ArrayList()
+
+                    if (p0.hasChildren()) {
+
+                        for (c in p0.children) {
+
+                            var category = c.getValue(Category::class.java)
+
+                            categories!!.add(category!!)
+
+                        }
+
+                        //Filter elements having
+                        categories = categories!!.filter { it.hashIdUser.equals(currentHashId) } as ArrayList<Category>
+
+                        //This code execute operation (add childs to allitems list)
+                        //Looping for (All categories)
+                        for (i in categories!!.indices) {
+
+                            val category = categories!![i]
+
+                            //Build a (CategoryItem) base (Category) (at index)
+                            //Note that: This item has (CATEGORY_TYPE)
+                            val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, false, category.color)
+
+                            allItems.add(categoryItem)
+
+                        }
+
+                        try {
+
+                            adapter?.notifyDataSetChanged()
+
+                            adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment, recyclerView)
+
+                            recyclerView!!.layoutManager = LinearLayoutManager(activity)
+
+                            recyclerView!!.adapter = adapter
+
+                            recyclerView.setToggleItemOnClick(false)
+
+                            recyclerView.setAccordion(false)
+
+                            recyclerView.openTill(0, 1, 2, 3)
+                        } catch (ex: Exception) {
+                            Toast.makeText(activity!!.applicationContext, "Danh sách trống", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
+                }
+
+            })
+
+        } catch (e: Exception) {
+
+            Toast.makeText(activity!!.applicationContext, "Danh sách trống", Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+    fun assignAdapterWhenAllItemsIsEmpty() {
 
 //        adapter = EventsAdapter(this!!.context!!, allItems, this,recyclerView)
 //
@@ -792,14 +817,14 @@ class CategoryFragment : Fragment() {
 //                fout.write(bytes, 0, length)
 //            }
 
-            do{
-                length=fin.read(bytes);
+            do {
+                length = fin.read(bytes);
 
-                if(length>0){
-                    fout.write(bytes,0,length);
+                if (length > 0) {
+                    fout.write(bytes, 0, length);
                 }
 
-            }while (length>0)
+            } while (length > 0)
 
             fout.flush()
             fout.close()
@@ -827,21 +852,21 @@ class CategoryFragment : Fragment() {
     //and move to the (precious position)
     fun refresh(item: Event) {
 
-        var flag=false
+        var flag = false
 
-        if(allItems.size==0) flag=true
+        if (allItems.size == 0) flag = true
 
         categories!!.clear()
         allItems.clear()
-        getAllEventFromDatabase()
+        getAllEventFromDatabase(false)
 //        allItems.addAll(items)
 
-        if(flag) assignAdapterWhenAllItemsIsEmpty()
+        if (flag) assignAdapterWhenAllItemsIsEmpty()
 
         //We put ? this here to avoid occur exception --> cash when allitems is empty
-        adapter?.notifyDataSetChanged()
+//        adapter?.notifyDataSetChanged()
 
-        recyclerView!!.scrollToPosition(searchPosition(item))
+//        recyclerView!!.scrollToPosition(searchPosition(item))
 
         showCreateEventMessage()
 
@@ -852,29 +877,29 @@ class CategoryFragment : Fragment() {
     fun refreshAfterRemovedCategory() {
         categories!!.clear()
         allItems.clear()
-        val items = fillAllItems(false,currentHashId)
-        allItems.addAll(items)
-        adapter?.notifyDataSetChanged()
+        getAllEventFromDatabase(false)
         showCreateEventMessage()
     }
 
     //Refresh edit
     fun editCategory(isEdit: Boolean) {
 
-        var flag=false
+        var flag = false
 
-        if(allItems.size==0) flag=true
+        if (allItems.size == 0) flag = true
 
         categories!!.clear()
+        //this here we don't clear allitems
+        //We just clear it when in the end
         allItems.clear()
-        getAllEventFromDatabase()
+        getAllEventFromDatabase(isEdit)
 //        val items = fillAllItems(isEdit)
 //        allItems.addAll(items)
 
-        if(flag) assignAdapterWhenAllItemsIsEmpty()
+        if (flag) assignAdapterWhenAllItemsIsEmpty()
 
         //attribute adapter is init before
-        adapter!!.notifyDataSetChanged()
+//        adapter!!.notifyDataSetChanged()
         showCreateEventMessage()
     }
 
@@ -889,41 +914,42 @@ class CategoryFragment : Fragment() {
         return pos
     }
 
-    fun getAllEventFromDatabase(){
+    fun getAllEventFromDatabase(isEdit: Boolean) {
         //In this case, we check fail although database hasn't tuple but even display as this
         //Get all Event having (user) having (hashId) is similar to (selected user)
         databaseEvents.ref.orderByChild("hashIdUser").equalTo(selectedCurrentMemberHashId)
 
         //(AddValueEventListener) because when data is changed then we (must update it)
-        databaseEvents.addValueEventListener(object: ValueEventListener {
+        databaseEvents.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                if(p0.hasChildren()){
+                if (p0.hasChildren()) {
 
                     //Thís attribute is used to check whether Realtime database having (Events)
                     //Corresponding to (Selected user)
                     //Event has (hashIdUser)
-                    var isExist=false
+                    var isExist = false
 
-                    var dataEvents=p0.children
+                    var dataEvents = p0.children
 
-                    allItems.clear()
+                    var tempAllItems = ArrayList(allItems)
 
-                    for(e in dataEvents){
+                    for (e in dataEvents) {
 
-                        if(e.child("hashIdUser").value!!.equals(selectedCurrentMemberHashId)){
+                        //Data about current User is exists
+                        if (e.child("hashIdUser").value!!.equals(selectedCurrentMemberHashId)) {
 
-                            isExist=true
+                            isExist = true
 
-                            var eventFb=e.getValue(EventFb::class.java)
+                            var eventFb = e.getValue(EventFb::class.java)
 
-                            var event=Event(eventFb!!,eventFb!!.levelRecusion)
+                            var event = Event(eventFb!!, eventFb!!.levelRecusion)
 
-                            allItems.add(event)
+                            tempAllItems.add(event)
 
                         }
 
@@ -935,14 +961,14 @@ class CategoryFragment : Fragment() {
                     // --> adapter is empty
                     //Because in this case, adapter is not allowed empty because multuply level
                     //==> Try catch when occuring fail out
-                    if(isExist) fillAllItems(false,currentHashId)
-                    else{
+                    if (isExist) fillAllItems(isEdit, currentHashId, tempAllItems)
+                    else {
                         try {
 
                             //Because before we have assigned adapter for RecycleView
                             adapter!!.notifyDataSetChanged()
 
-                            adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment,recyclerView)
+                            adapter = EventsAdapter(this@CategoryFragment!!.context!!, allItems, this@CategoryFragment, recyclerView)
 
                             recyclerView!!.layoutManager = LinearLayoutManager(activity)
 
@@ -952,15 +978,17 @@ class CategoryFragment : Fragment() {
 
                             recyclerView.setAccordion(false)
 
-                            recyclerView.openTill(0,1,2,3)
+                            recyclerView.openTill(0, 1, 2, 3)
 
-                        }catch (e:Exception){
+                        } catch (e: Exception) {
 
-                            Toast.makeText(activity!!.applicationContext,"Danh sách trống", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity!!.applicationContext, "Danh sách trống", Toast.LENGTH_SHORT).show()
 
                         }
                     }
 
+                }else{
+                    addOnlyCategoryToAllItems()
                 }
 
             }
