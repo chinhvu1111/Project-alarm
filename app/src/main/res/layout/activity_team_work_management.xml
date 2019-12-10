@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_team"
+    tools:context=".activity.TeamWorkManagementActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarGroupTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<androidx.appcompat.widget.Toolbar-->
+            <!--app:titleTextColor="@color/white"-->
+            <!--android:id="@+id/toolBarGroup"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize">-->
+        <!--</androidx.appcompat.widget.Toolbar>-->
+
+        <com.google.android.material.tabs.TabLayout
+            app:tabTextColor="@color/dark_blue"
+            android:id="@+id/tabMainGroupTask"
+            android:layout_width="match_parent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:layout_height="wrap_content"></com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpGroup"
+        android:layout_below="@+id/appbarGroupTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>

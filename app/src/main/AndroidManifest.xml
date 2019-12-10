@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".utils.FbApplication"
@@ -24,8 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".activity.CreatingGroupActivity"></activity>
-        <activity android:name=".activity.GroupTask" />
+        <activity android:name=".activity.ProfileUserActivity" />
+        <activity android:name=".activity.TeamWorkManagementActivity" />
+        <activity android:name=".activity.CreatingGroupActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.TaskManagementActivity" />

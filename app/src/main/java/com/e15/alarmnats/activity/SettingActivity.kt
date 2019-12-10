@@ -68,17 +68,31 @@ class SettingActivity : AppCompatActivity() {
 
             var item2=SettingItem()
 
-            item2.title="Đăng xuất"
+            item2.title="Hồ sơ bản thân"
 
-            item2.detailTitle="${email}"
+            item2.detailTitle="Các nội dung liên quan đến bản thân người dùng"
 
-            item2.iconId=R.drawable.logout_64
+            item2.iconId=R.drawable.user_profile
 
             item2.backGround=R.color.colorWhite
 
             item2.id=3
 
             listItemSetting.add(item2)
+
+            var item3=SettingItem()
+
+            item3.title="Đăng xuất"
+
+            item3.detailTitle="${email}"
+
+            item3.iconId=R.drawable.logout_64
+
+            item3.backGround=R.color.colorWhite
+
+            item3.id=4
+
+            listItemSetting.add(item3)
 
         }
 

@@ -539,9 +539,11 @@ class CategoryFragment : Fragment() {
 
                                                         var emailOfMember = u.child("email").value.toString()
 
+                                                        var username=u.child("username").value.toString()
+
                                                         listMember.add(User(u.key.toString(), emailOfMember))
 
-                                                        listEmailMember.add(emailOfMember)
+                                                        listEmailMember.add(username)
 
                                                     }
 
@@ -562,14 +564,15 @@ class CategoryFragment : Fragment() {
 
                                                     listMember.removeAt(indexDelete)
 
+                                                    listEmailMember.removeAt(indexDelete)
+
                                                     listMember.add(0, currentU)
 
+                                                    listEmailMember.add(0,currentU.username)
+
+                                                    memberAdapter.notifyDataSetChanged()
+
                                                 }
-
-                                                //Adding to position 0 (email)
-                                                listEmailMember.remove(currentEmail)
-
-                                                listEmailMember.add(0, currentEmail)
 
                                                 memberAdapter.notifyDataSetChanged()
 

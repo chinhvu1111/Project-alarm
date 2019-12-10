@@ -15,6 +15,7 @@ import com.e15.alarmnats.Model.SettingItem
 import com.e15.alarmnats.R
 import com.e15.alarmnats.activity.ColorSettingActivity
 import com.e15.alarmnats.activity.LoginActivity
+import com.e15.alarmnats.activity.ProfileUserActivity
 import com.e15.alarmnats.viewholder.ViewHolderSetting
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
@@ -133,21 +134,36 @@ class Setting_general_adapter: RecyclerView.Adapter<ViewHolderSetting> {
 
                     override fun onClick(v: View?) {
 
+                        var intent: Intent = Intent(context, ProfileUserActivity::class.java)
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                        context.startActivity(intent)
+
+                    }
+                })
+            }
+
+            4->{
+                holderSettingItem.rootView.setOnClickListener(object : View.OnClickListener {
+
+                    override fun onClick(v: View?) {
+
                         var mFireBaseUser=auth.currentUser
+
+                        var editor=context.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
+
+                        editor.putString("username","")
+
+                        editor.putString("Email","")
+
+                        editor.commit()
 
                         if(mFireBaseUser!=null){
 
                             FirebaseAuth.getInstance().signOut()
 
                             var intent: Intent = Intent(context, Main_AlarmActivity::class.java)
-
-                            var editor=context.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
-
-                            editor.putString("username","")
-
-                            editor.putString("Email","")
-
-                            editor.commit()
 
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 

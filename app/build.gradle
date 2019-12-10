@@ -139,6 +139,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-tasks:9.6.1'
 
+    //This library is used to for setting profile
+    implementation 'com.mikhaellopez:circularimageview:4.1.1'
 //    implementation 'com.jakewharton:butterknife:7.0.1'
 //    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
     implementation 'com.jakewharton:butterknife:10.0.0'

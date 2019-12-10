@@ -18,8 +18,9 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.mikhaellopez.circularimageview.CircularImageView
 
 class SignUpActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var btnSignUp: Button
@@ -28,11 +29,27 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var inPassword: EditText
 
+    lateinit var edtDescription:EditText
+
+    lateinit var edtReTypePassword:EditText
+
+    lateinit var edtUsername:EditText
+
+    lateinit var imgAddAvatar:CircularImageView
+
     lateinit var auth: FirebaseAuth
+
+    lateinit var oldauth:FirebaseAuth
 
     lateinit var userDatabase:DatabaseReference
 
     lateinit var firebaseDatabase:FirebaseDatabase
+
+    lateinit var currentUser:FirebaseUser
+
+    var oldEmail:String?=""
+
+    var oldPassword:String=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +62,14 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
         inputEmail = findViewById(R.id.inputEmailSn)
 
         inPassword = findViewById(R.id.inPasswordSn)
+
+        imgAddAvatar=findViewById(R.id.imgAddAvatar)
+
+        edtUsername=findViewById(R.id.edtUsername)
+
+        edtReTypePassword=findViewById(R.id.edtReTypePassword)
+
+        edtDescription=findViewById(R.id.edtDescription)
 
         firebaseDatabase= FirebaseDatabase.getInstance()
 
@@ -87,7 +112,54 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
+        edtUsername.setOnTouchListener(object:View.OnTouchListener{
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+
+                if(edtUsername.text.toString().equals("Không được để trống Email!")){
+
+                    edtUsername.setTextColor(resources.getColor(R.color.white))
+
+                    edtUsername.setText("")
+
+                }
+
+                //If return false then we can touch to enter text
+                return false
+
+            }
+        })
+
         auth = FirebaseAuth.getInstance()
+
+        //This is used to sign in immediately
+        oldauth=FirebaseAuth.getInstance()
+
+//        currentUser=oldauth.currentUser!!
+//
+//        var query=userDatabase.orderByChild("email").equalTo(currentUser!!.email)
+//
+//        oldEmail=currentUser?.email
+//
+//        query.addListenerForSingleValueEvent(object:ValueEventListener{
+//            override fun onCancelled(p0: DatabaseError) {
+//
+//            }
+//
+//            override fun onDataChange(p0: DataSnapshot) {
+//
+//                if(p0.hasChildren()){
+//
+//                    var data=p0.children.iterator().next()
+//
+//                    oldPassword=data.child("password").value.toString()
+//
+//                }
+//
+//            }
+//
+//        })
+
+        imgAddAvatar.setOnClickListener(this)
 
     }
 
@@ -100,6 +172,12 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                 var email = inputEmail.text.toString()
 
                 var password = inPassword.text.toString()
+
+                var username=edtUsername.text.toString()
+
+                var reTypePassword=edtReTypePassword.text.toString()
+
+                var description=edtDescription.text.toString()
 
                 if (email.isEmpty()) {
 
@@ -119,9 +197,27 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
                     inPassword.requestFocus()
 
+                }else if(username.isEmpty()){
+
+                    Toast.makeText(applicationContext, "Tên người dùng trống xin mời nhập lại!", Toast.LENGTH_SHORT).show()
+
+                    edtUsername.setTextColor(resources.getColor(R.color.red))
+
+                    edtUsername.setText("Không được để trống Username!")
+
+                    edtUsername.requestFocus()
+
                 } else if (password.length<6) {
 
-                    Toast.makeText(applicationContext, "Mật khẩu phải trên 6 ký tự yêu cầu nhập lại!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Mật khẩu phải trên 6 ký tự, yêu cầu nhập lại!", Toast.LENGTH_SHORT).show()
+
+                    return
+
+                } else if(!reTypePassword.equals(password)){
+
+                    Toast.makeText(applicationContext, "Mật khẩu không khớp, yêu cầu nhập lại!", Toast.LENGTH_SHORT).show()
+
+                    return
 
                 } else if (!password.isEmpty() && !email.isEmpty()) {
 
@@ -129,13 +225,36 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                         override fun onComplete(p0: Task<AuthResult>) {
                             if (p0.isSuccessful) {
 
+                                //Generated key of new user
                                 var idUser=userDatabase.push().key
 
-                                var user=User(idUser!!,email)
+                                var user=User(username,description,idUser!!,email,password)
 
                                 userDatabase.child(idUser).setValue(user)
 
                                 Toast.makeText(applicationContext, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show()
+
+                                auth.signOut()
+
+                                var editor=applicationContext.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
+
+                                editor.putString("username","")
+
+                                editor.putString("Email","")
+
+//                                //Sign in immediately
+//                                oldauth.signInWithEmailAndPassword(oldEmail!!,oldPassword).addOnCompleteListener(object:OnCompleteListener<AuthResult>{
+//                                    override fun onComplete(p0: Task<AuthResult>) {
+//
+//                                        if(p0.isSuccessful){
+//
+//                                            Toast.makeText(applicationContext,"Đăng nhập lại thành công",Toast.LENGTH_SHORT).show()
+//
+//                                        }
+//
+//                                    }
+//
+//                                })
 
                                 var intent = Intent(this@SignUpActivity, LoginActivity::class.java)
 
@@ -151,6 +270,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     })
                 }
+
+            }
+
+            R.id.imgAddAvatar->{
 
             }
 

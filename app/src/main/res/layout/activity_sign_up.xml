@@ -7,102 +7,201 @@
     android:background="@drawable/background_sign_up"
     tools:context=".activity.SignUpActivity">
 
-    <androidx.cardview.widget.CardView
-        android:layout_centerVertical="true"
-        android:id="@+id/cvEmail"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        app:cardCornerRadius="10dp">
-
-        <RelativeLayout
-            android:id="@+id/lnEmail"
-            android:background="@drawable/background_login_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <RelativeLayout
+        android:background="@drawable/background_box_signup"
+        android:layout_centerInParent="true"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imgAddAvatar"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/users"
+            app:civ_border_color="@color/burlyWood"
+            app:civ_border_width="3dp"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="10"
+            app:civ_shadow_color="#3f51b5"/>
+        <androidx.cardview.widget.CardView
+            android:layout_below="@+id/imgAddAvatar"
+            android:id="@+id/cvEmail"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="10dp">
 
             <RelativeLayout
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="5dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/background_icon_login"
-                android:id="@+id/lnIconlogin"
-                android:layout_width="50dp"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/ic_account_circle_white_24dp"
-                    android:id="@+id/imgEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-
-            <EditText
-                android:textSize="14dp"
-                android:textColor="@color/white"
-                android:layout_toRightOf="@+id/lnIconlogin"
-                android:id="@+id/inputEmailSn"
+                android:id="@+id/lnEmail"
+                android:background="@drawable/background_login_field"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Email" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvPassword"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/cvEmail"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp">
+                <RelativeLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/background_icon_login"
+                    android:id="@+id/lnIconlogin"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/ic_account_circle_white_24dp"
+                        android:id="@+id/imgEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
 
-        <RelativeLayout
-            android:background="@drawable/background_login_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <EditText
+                    android:textSize="14dp"
+                    android:textColor="@color/white"
+                    android:layout_toRightOf="@+id/lnIconlogin"
+                    android:id="@+id/inputEmailSn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Email" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvPassword"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/cvEmail"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            app:cardCornerRadius="10dp">
 
             <RelativeLayout
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="5dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/background_icon_login"
-                android:id="@+id/lnIconPassword"
-                android:layout_width="50dp"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/ic_lock_white_24dp"
-                    android:id="@+id/imgPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
+                android:background="@drawable/background_login_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <RelativeLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/background_icon_login"
+                    android:id="@+id/lnIconPassword"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/ic_lock_white_24dp"
+                        android:id="@+id/imgPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/inPasswordSn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toRightOf="@+id/lnIconPassword"
+                    android:hint="Mật khẩu"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+        <RelativeLayout
+            android:id="@+id/lnRepassword"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/cvPassword"
+            android:background="@drawable/background_layout_item_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_width="250dp"
+            android:layout_height="45dp">
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/imgRepassword"
+                android:src="@drawable/ic_lock_white_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <EditText
-                android:textSize="14dp"
+                android:textColor="@color/white"
+                android:id="@+id/edtReTypePassword"
                 android:inputType="textPassword"
-                android:textColor="@color/white"
-                android:layout_toRightOf="@+id/lnIconPassword"
-                android:id="@+id/inPasswordSn"
+                android:gravity="left|center_vertical"
+                android:hint="Nhập lại mật khẩu"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/background_editext_profile"
+                android:layout_toRightOf="@+id/imgRepassword"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Mật khẩu" />
+                android:layout_height="match_parent" />
         </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-    <Button
-        android:id="@+id/btnSignUp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/cvPassword"
-        android:background="@drawable/background_task_item"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:text="Đăng ký"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:id="@+id/lnDescription"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/lnUser"
+            android:background="@drawable/background_layout_item_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_width="250dp"
+            android:layout_height="45dp">
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/imgUser"
+                android:src="@drawable/ic_description_white_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:textColor="@color/white"
+                android:id="@+id/edtDescription"
+                android:inputType="textMultiLine"
+                android:gravity="left|center_vertical"
+                android:hint="Mô tả bản thân"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/background_editext_profile"
+                android:layout_toRightOf="@+id/imgUser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/lnUser"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/lnRepassword"
+            android:background="@drawable/background_layout_item_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_width="250dp"
+            android:layout_height="45dp">
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/imgIntroduction"
+                android:src="@drawable/ic_account_circle_white_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:textColor="@color/white"
+                android:id="@+id/edtUsername"
+                android:gravity="left|center_vertical"
+                android:hint="Tên người dùng"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/background_editext_profile"
+                android:layout_toRightOf="@+id/imgIntroduction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <Button
+            android:layout_marginBottom="10dp"
+            android:id="@+id/btnSignUp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/lnDescription"
+            android:background="@drawable/background_task_item"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="Đăng ký"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 </RelativeLayout>

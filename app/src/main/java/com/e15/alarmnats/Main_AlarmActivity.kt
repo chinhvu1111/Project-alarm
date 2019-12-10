@@ -260,7 +260,7 @@ class Main_AlarmActivity : AppCompatActivity() {
 
     fun navigateToGroup(view:View){
 
-        var intent = Intent(applicationContext, GroupTask::class.java)
+        var intent = Intent(applicationContext, TeamWorkManagementActivity::class.java)
 
         intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 

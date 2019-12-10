@@ -5,11 +5,14 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +29,7 @@ import java.lang.NullPointerException
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
-class GroupTask : AppCompatActivity(),View.OnClickListener {
+class GroupTask : Fragment,View.OnClickListener {
     lateinit var auth:FirebaseAuth
 
     lateinit var firebase:FirebaseDatabase
@@ -47,6 +50,8 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
     lateinit var userCurrent:FirebaseUser
 
+    constructor() : super()
+
     companion object {
         var idCurrentUser:String=""
 
@@ -54,9 +59,9 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
     var CREATE_GROUP:Int=1
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group_task)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        var view=inflater.inflate(R.layout.activity_group_task,container,false)
 
         auth=FirebaseAuth.getInstance()
 
@@ -64,9 +69,9 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
         if(userCurrent==null){
 
-            AlertDialog.Builder(applicationContext, R.style.MyDialogTheme).setMessage("Bạn chưa đăng nhập bạn có muốn chuyển đến khung đăng nhập?"
+            AlertDialog.Builder(activity!!, R.style.MyDialogTheme).setMessage("Bạn chưa đăng nhập bạn có muốn chuyển đến khung đăng nhập?"
             ).setPositiveButton("Có", DialogInterface.OnClickListener { dialog, which ->
-                var intent=Intent(this,LoginActivity::class.java)
+                var intent=Intent(activity,LoginActivity::class.java)
 
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
@@ -76,44 +81,40 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
         }
 
-        rcListGroup=findViewById(R.id.rcListGroup)
+        rcListGroup=view.findViewById(R.id.rcListGroup)
 
         listGroups= ArrayList<Group>()
 
         listMygroup= ArrayList()
 
-        rcListGroup.layoutManager=LinearLayoutManager(this)
+        rcListGroup.layoutManager=LinearLayoutManager(activity)
 
-        addGroup=findViewById(R.id.addGroup)
+        addGroup=view.findViewById(R.id.addGroup)
 
-        rcMygroup=findViewById(R.id.rcMygroup)
+        rcMygroup=view.findViewById(R.id.rcMygroup)
 
-        rcMygroup.layoutManager=LinearLayoutManager(this)
+        rcMygroup.layoutManager=LinearLayoutManager(activity)
 
-        lnLoadProgressBar=findViewById(R.id.lnLoadProgressBar)
+        lnLoadProgressBar=view.findViewById(R.id.lnLoadProgressBar)
 
-        lnLoadMyGroup=findViewById(R.id.lnLoadMyGroup)
+        lnLoadMyGroup=view.findViewById(R.id.lnLoadMyGroup)
 
         firebase= FirebaseDatabase.getInstance()
 
         addGroup.setOnClickListener(this)
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-
+        //-------------------------
         var databaseGroup=firebase.getReference("Group")
 
-        var groupAdapter=GroupsAdapter(this,listGroups)
+        var groupAdapter=GroupsAdapter(activity!!,listGroups)
 
         rcListGroup.adapter=groupAdapter
 
         rcListGroup.itemAnimator=DefaultItemAnimator()
 
-        rcListGroup.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
+        rcListGroup.addItemDecoration(DividerItemDecoration(activity!!.applicationContext,DividerItemDecoration.VERTICAL))
 
-        var mygroupAdapter=GroupsAdapter(this,listMygroup)
+        var mygroupAdapter=GroupsAdapter(activity!!.applicationContext,listMygroup)
 
         rcMygroup.adapter=mygroupAdapter
 
@@ -202,52 +203,10 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
         databaseGroup.addValueEventListener(valueEventListener)
 
-
-
-        //-------------------------------------------
-
-//        var getHashIdOfCurrentUserByRefEmailTask:Task<Any?>
-//
-//        var continuteGetHashIdOfCurrentUserByRefEmailTask=object:Continuation<Any?,Any?>{
-//
-//            override fun then(p0: Task<Any?>): Any? {
-//
-//
-//                return null
-//            }
-//
-//        }
-//
-//        //-------------------------------------------
-//
-//        var getMyGroupTask:Task<Any?>
-//
-//        //This is a single task
-//        var continueGetMyGroupTask=object :Continuation<Any?,Any?>{
-//            override fun then(p0: Task<Any?>): Any? {
-//
-//                return null;
-//
-//            }
-//        }
-//
-//        var executors=Executors.newSingleThreadExecutor()
-//
-//        taskGetGroupOfUser= Tasks.call(callable1)
-//                .continueWith(continuteGetHashIdOfCurrentUserByRefEmailTask)
-//                .continueWith(continueGetMyGroupTask)
-//
-//        taskGetGroupOfUser.addOnSuccessListener(object:OnSuccessListener<Any?>{
-//
-//            override fun onSuccess(p0: Any?) {
-//
-//
-//
-//            }
-//
-//        })
+        return view
 
     }
+
 
     override fun onClick(v: View?) {
 
@@ -255,7 +214,7 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
             R.id.addGroup->{
 
-                var intent=Intent(this,CreatingGroupActivity::class.java)
+                var intent=Intent(activity,CreatingGroupActivity::class.java)
 
                 var currentUser=auth.currentUser
 
@@ -265,7 +224,7 @@ class GroupTask : AppCompatActivity(),View.OnClickListener {
 
                 }catch (ex:NullPointerException){
 
-                    Toast.makeText(applicationContext,"Bạn chưa đăng nhập",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity!!.applicationContext,"Bạn chưa đăng nhập",Toast.LENGTH_SHORT).show()
 
                     return
 
