@@ -137,7 +137,7 @@
                             android:background="@color/colorBitterSweetDark"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="Thời gian biểu"
+                            android:text="Lịch biểu"
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="18sp" />
@@ -190,7 +190,7 @@
                             android:background="@color/colorFlowerDark"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="Quản lý tác vụ"
+                            android:text="Eisenhower"
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="18sp" />

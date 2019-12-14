@@ -131,7 +131,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:textColor="?attr/event_title_color_setting_task"
             android:textColorHint="@color/gray"
-            android:inputType="textImeMultiLine"
+            android:inputType="textMultiLine"
             android:hint="Chi tiết"
             android:id="@+id/eventDetail"
             android:layout_width="match_parent"

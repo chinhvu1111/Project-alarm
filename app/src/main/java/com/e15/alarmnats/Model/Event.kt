@@ -17,6 +17,8 @@ open class Event:RecyclerViewItem {
     var isShow: Boolean = false
     var enabled:Int = 0;
     var type: Int = 0
+
+    //This attribute not necessary in database
     var notify: String? = null
     var repeatMode: String? = null
     var repeatCount: String? = null
@@ -27,6 +29,7 @@ open class Event:RecyclerViewItem {
 
     var isImportant:Boolean = false
 
+    //This is not necessary --> not format 3NF
     var level:String=""
 
     var remainingTime:Long = 0

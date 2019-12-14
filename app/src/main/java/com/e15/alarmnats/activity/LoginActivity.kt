@@ -12,8 +12,8 @@ import com.e15.alarmnats.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.FirebaseError
+import com.google.firebase.auth.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -97,7 +97,24 @@ class LoginActivity : AppCompatActivity() {
 
                             } else {
 
-                                Toast.makeText(applicationContext, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show()
+                                var errorCode=(p0.exception!! as FirebaseAuthException).errorCode
+
+                                when(errorCode){
+                                    "ERROR_INVALID_EMAIL"->{
+
+                                        Toast.makeText(applicationContext, "Sai tài khoản gmail!", Toast.LENGTH_SHORT).show()
+
+                                        inputEmail.requestFocus()
+
+                                    }
+                                    "ERROR_WRONG_PASSWORD"->{
+
+                                        Toast.makeText(applicationContext, "Sai mật khẩu!", Toast.LENGTH_SHORT).show()
+
+                                        inPassword.requestFocus()
+
+                                    }
+                                }
 
                             }
                         }

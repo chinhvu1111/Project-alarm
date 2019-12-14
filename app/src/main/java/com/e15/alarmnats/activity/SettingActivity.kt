@@ -80,13 +80,14 @@ class SettingActivity : AppCompatActivity() {
 
             listItemSetting.add(item2)
 
+            //Item sign up
             var item3=SettingItem()
 
-            item3.title="Đăng xuất"
+            item3.title="Đăng ký"
 
-            item3.detailTitle="${email}"
+            item3.detailTitle=""
 
-            item3.iconId=R.drawable.logout_64
+            item3.iconId=R.drawable.sign_up
 
             item3.backGround=R.color.colorWhite
 
@@ -94,6 +95,38 @@ class SettingActivity : AppCompatActivity() {
 
             listItemSetting.add(item3)
 
+            //Item log out
+            var item4=SettingItem()
+
+            item4.title="Đăng xuất"
+
+            item4.detailTitle="${email}"
+
+            item4.iconId=R.drawable.logout_64
+
+            item4.backGround=R.color.colorWhite
+
+            item4.id=5
+
+            listItemSetting.add(item4)
+
+
+
+        }else{
+            //Item sign up
+            var item3=SettingItem()
+
+            item3.title="Đăng ký"
+
+            item3.detailTitle=""
+
+            item3.iconId=R.drawable.sign_up
+
+            item3.backGround=R.color.colorWhite
+
+            item3.id=4
+
+            listItemSetting.add(item3)
         }
 
         var setting_adapter= Setting_general_adapter(applicationContext,this)

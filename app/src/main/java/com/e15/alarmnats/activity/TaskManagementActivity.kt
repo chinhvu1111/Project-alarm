@@ -557,6 +557,10 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
         when (item.itemId) {
 
+            R.id.searchTask->{
+                allEventsFragment!!.showSearchLayout()
+            }
+
             R.id.addCategory -> {
 
                 val dialog = CategoryDialogFragment.getInstance(Category(), false)

@@ -21,6 +21,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
+import java.util.regex.Pattern
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class SignUpActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var btnSignUp: Button
@@ -264,7 +268,33 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
                             } else {
 
-                                Toast.makeText(applicationContext, "Tạo tài khoản thất bại!", Toast.LENGTH_SHORT).show()
+                                try {
+                                    throw p0.exception!!
+                                } catch (e: FirebaseAuthWeakPasswordException) {
+
+                                    Toast.makeText(applicationContext,"Mật khẩu yếu mời nhập lại",Toast.LENGTH_SHORT).show()
+
+                                    inPassword.requestFocus()
+
+                                } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                                    Toast.makeText(applicationContext,"Tài khoản gmail nhập sai định dạng",Toast.LENGTH_SHORT).show()
+
+                                    inputEmail.requestFocus()
+
+                                } catch (e: FirebaseAuthUserCollisionException) {
+
+                                    Toast.makeText(applicationContext,"Tài khoản đã tồn tại mời nhập lại",Toast.LENGTH_SHORT).show()
+
+                                    inputEmail.requestFocus()
+
+                                } catch (e: Exception) {
+                                    Toast.makeText(applicationContext,"Tài khoản không tồn tại/Sai mật khẩu mời nhập lại",Toast.LENGTH_SHORT).show()
+
+                                    inputEmail.requestFocus()
+
+                                }
+
 
                             }
                         }

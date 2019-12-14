@@ -8,6 +8,10 @@
         <menu>
             <group android:checkableBehavior="all">
                 <item
+                    android:id="@+id/searchTask"
+                    android:title="Tìm kiếm tác vụ"
+                    app:showAsAction="ifRoom" />
+                <item
                     android:id="@+id/addCategory"
                     android:title="Thêm danh mục"
                     app:showAsAction="ifRoom"></item>
