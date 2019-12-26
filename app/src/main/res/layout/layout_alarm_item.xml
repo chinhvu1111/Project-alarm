@@ -66,7 +66,7 @@
         android:layout_toStartOf="@+id/button_delete"
         android:textColor="#FFFFFF"
         android:background="@drawable/button_shape"
-        android:text="EDIT" />
+        android:text="SỬA" />
 
     <Button
         android:id="@+id/button_delete"
@@ -78,7 +78,7 @@
         android:layout_marginEnd="11dp"
         android:textColor="#FFFFFF"
         android:background="@drawable/button_shape"
-        android:text="Delete" />
+        android:text="XÓA" />
 
 
 </RelativeLayout>

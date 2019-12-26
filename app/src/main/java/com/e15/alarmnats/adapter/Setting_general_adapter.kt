@@ -175,6 +175,10 @@ class Setting_general_adapter: RecyclerView.Adapter<ViewHolderSetting> {
 
                         editor.commit()
 
+                        var sharedPreferences=context.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE).edit()
+
+                        sharedPreferences.putBoolean("isAddingDbfromRealtime",false)
+
                         if(mFireBaseUser!=null){
 
                             FirebaseAuth.getInstance().signOut()
@@ -184,6 +188,8 @@ class Setting_general_adapter: RecyclerView.Adapter<ViewHolderSetting> {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                             context.startActivity(intent)
+
+                            context.deleteDatabase("Remind")
 
                             Toast.makeText(context,"Đăng xuất thành công!",Toast.LENGTH_SHORT).show()
 

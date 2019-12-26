@@ -1,19 +1,25 @@
 package com.e15.alarmnats.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.e15.alarmnats.Database.ReminderDatabase
 import com.e15.alarmnats.Main_AlarmActivity
+import com.e15.alarmnats.Model.Category
+import com.e15.alarmnats.Model.Event
+import com.e15.alarmnats.Model.EventFb
 import com.e15.alarmnats.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.FirebaseError
 import com.google.firebase.auth.*
+import com.google.firebase.database.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,9 +35,31 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var tvSignup:TextView
 
+    lateinit var firebaseDatabase: FirebaseDatabase
+
+    lateinit var eventDatabase: DatabaseReference
+
+    lateinit var categoryDatabase: DatabaseReference
+
+    lateinit var userDatabase: DatabaseReference
+
+    lateinit var dbHandler: ReminderDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        auth= FirebaseAuth.getInstance()
+
+        dbHandler= ReminderDatabase(applicationContext)
+
+        firebaseDatabase = FirebaseDatabase.getInstance()
+
+        eventDatabase = firebaseDatabase.getReference("Events")
+
+        categoryDatabase = firebaseDatabase.getReference("Category")
+
+        userDatabase = firebaseDatabase.getReference("User")
 
         lnEmail = findViewById(R.id.lnEmail)
 
@@ -79,6 +107,9 @@ class LoginActivity : AppCompatActivity() {
                                 var user = auth.currentUser
 
                                 var intent = Intent(this@LoginActivity, Main_AlarmActivity::class.java)
+
+                                //adding db from Realtime database
+                                addingDb(user!!)
 
                                 var editor=applicationContext.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
 
@@ -137,6 +168,82 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    fun addingDb(currentUser:FirebaseUser){
+
+        var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE)
+
+        var isAddingDbFromRealtimeDbFirst=sharedPreferences.getBoolean("isAddingDbfromRealtime",false)
+
+        if (!isAddingDbFromRealtimeDbFirst) {
+
+            userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    //Drop db of (current User)/(before user) then adding new database of current User
+                    dbHandler.dropDb()
+
+                    var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE).edit()
+
+                    sharedPreferences.putBoolean("isAddingDbfromRealtime",true)
+
+                    sharedPreferences.commit()
+
+                    var dataUser=p0.children.iterator().next()
+
+                    var idUser=dataUser.key.toString()
+
+                    categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (ca in p0.children) {
+
+                                var category = ca.getValue(Category::class.java)
+
+                                if(category!!.hashIdUser.equals(idUser))dbHandler.createNewCategory(category!!)
+
+                            }
+
+                        }
+                    })
+
+                    eventDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (e in p0.children) {
+
+                                var eventFb = e.getValue(EventFb::class.java)
+
+                                var event = Event(eventFb!!, eventFb!!.levelRecusion)
+
+                                if(event.hashIdUser.equals(idUser))dbHandler.createNewEvent(event)
+
+                            }
+
+                        }
+
+                    })
+
+                    Toast.makeText(applicationContext, "Đồng bộ cơ sở dữ liệu thành công!", Toast.LENGTH_SHORT).show()
+
+                }
+
+            })
+
+        }
     }
 
 }

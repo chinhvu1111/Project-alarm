@@ -55,6 +55,7 @@ open class Event:RecyclerViewItem {
 
     constructor(eventFb: EventFb,levelRecusion: Int):super(levelRecusion){
         hashId=eventFb.hashId
+        hashIdUser=eventFb.hashIdUser
         title=eventFb.title
         description=eventFb.description
         place=eventFb.place

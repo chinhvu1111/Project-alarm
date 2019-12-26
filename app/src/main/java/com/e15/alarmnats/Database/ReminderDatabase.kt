@@ -665,4 +665,8 @@ class ReminderDatabase(private val context: Context) : SQLiteOpenHelper(context,
             return events
         }
 
+    fun dropDb(){
+        context.deleteDatabase("Remind")
+    }
+
 }

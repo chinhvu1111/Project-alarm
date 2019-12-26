@@ -31,7 +31,7 @@ import java.util.ArrayList
 
 class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     private val categoryFragment: CategoryFragment,
-                    mMultiLevelRecyclerView:MultiLevelRecyclerView) : MultiLevelAdapter(allItems) {
+                    mMultiLevelRecyclerView: MultiLevelRecyclerView) : MultiLevelAdapter(allItems) {
 
     //NOTE:
     //(All items) exists that contain both (Category) and (event)
@@ -46,13 +46,13 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
     var dbHandler: ReminderDatabase
 
-    var mMultiLevelRecyclerView:MultiLevelRecyclerView
+    var mMultiLevelRecyclerView: MultiLevelRecyclerView
 
-    var firebaseDatabase:FirebaseDatabase
+    var firebaseDatabase: FirebaseDatabase
 
-    lateinit var eventDatabase:DatabaseReference
+    lateinit var eventDatabase: DatabaseReference
 
-    lateinit var categoryDatabase:DatabaseReference
+    lateinit var categoryDatabase: DatabaseReference
 
     init {
 
@@ -63,13 +63,13 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
         dbHandler = ReminderDatabase(context)
 
-        this.mMultiLevelRecyclerView=mMultiLevelRecyclerView
+        this.mMultiLevelRecyclerView = mMultiLevelRecyclerView
 
-        firebaseDatabase= FirebaseDatabase.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
 
-        eventDatabase=firebaseDatabase.getReference("Events")
+        eventDatabase = firebaseDatabase.getReference("Events")
 
-        categoryDatabase=firebaseDatabase.getReference("Category")
+        categoryDatabase = firebaseDatabase.getReference("Category")
 
     }
 
@@ -102,14 +102,13 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         return CategoryViewHolder(parent)
     }
 
-    fun setExpandButton(expandButton:ImageView,isExpanded:Boolean){
+    fun setExpandButton(expandButton: ImageView, isExpanded: Boolean) {
 
-        if(isExpanded){
+        if (isExpanded) {
 
             expandButton.setImageResource(R.drawable.ic_arrow_down_white_24dp)
 
-        }
-        else{
+        } else {
 
             expandButton.setImageResource(R.drawable.ic_arrow_up_white_24dp)
 
@@ -122,6 +121,10 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         //This code meaning each time we click expansion button then (allitems will add child items to allitems)
         //get item at position in the list of items
         val item = allItems!!.get(position)
+
+        var sharePreferences = context.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE)
+
+        var idUser = sharePreferences.getString("hashidUser", "")
 
         when (item.type) {
 
@@ -136,12 +139,19 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     holder.btnDeleteCat.visibility = View.VISIBLE
                     holder.btnEditCat.visibility = View.VISIBLE
 
-
                     //When clicking editImage or EditButton Category
                     holder.btnEditCat.setOnClickListener {
 
+                        if (!item.hashIdUser.equals(idUser)) {
+
+                            Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
+
+                            return@setOnClickListener
+
+                        }
+
                         //Category class include (id, title, color, type)
-                        val category = Category(item.hashIdCategory, item.title!!, item.color!!,0)
+                        val category = Category(item.hashIdCategory, item.title!!, item.color!!, 0)
 
                         //Show dialog to (update category) same as (adding category)
                         //but diference from this, the text is (filled automatically)
@@ -150,6 +160,14 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     }
 
                     holder.btnDeleteCat.setOnClickListener {
+
+                        if (!item.hashIdUser.equals(idUser)) {
+
+                            Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
+
+                            return@setOnClickListener
+
+                        }
 
                         //show confirm dialog to be sure want to delete this category
                         showConfirmDialog(item)
@@ -163,7 +181,18 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     holder.btnDeleteCat.visibility = View.GONE
                     holder.btnEditCat.visibility = View.GONE
 
-                    holder.imgAddEvent.setOnClickListener { hideOrShowListener.setHideOrShow(item, false) }
+                    holder.imgAddEvent.setOnClickListener {
+
+                        if(!item.hashIdUser.equals(idUser)){
+
+                            Toast.makeText(context,"Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!",Toast.LENGTH_SHORT).show()
+
+                            return@setOnClickListener
+
+                        }
+
+                        hideOrShowListener.setHideOrShow(item, false)
+                    }
                 }
             }
 
@@ -181,14 +210,14 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                 var evenHolder = holder as EventViewHolder
 
                 //When clicking (expands items)
-                if(item.hasChildren()&&item.children.size>0){
+                if (item.hasChildren() && item.children.size > 0) {
 
                     setExpandButton(evenHolder.mExpandIcon, item.isExpanded)
 
-                    evenHolder.mExpandButton.isVisible=true
+                    evenHolder.mExpandButton.isVisible = true
 
-                }else{
-                    evenHolder.mExpandButton.isVisible=false
+                } else {
+                    evenHolder.mExpandButton.isVisible = false
                 }
 
                 //Indent child items
@@ -201,9 +230,9 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                 // approximately 160 dpi screen (for example a 240x320, 1.5"x2" screen),
                 // providing the baseline of the system's display. Thus on a 160dpi screen
                 // this density value will be 1; on a 120 dpi screen it would be .75; etc.
-                var density=context.resources.displayMetrics.density
+                var density = context.resources.displayMetrics.density
 
-                ((evenHolder.containerLayout.layoutParams)as ViewGroup.MarginLayoutParams).leftMargin= (allItems.get(position).levelRecusion * 20 * density + 0.5f).toInt()+30;
+                ((evenHolder.containerLayout.layoutParams) as ViewGroup.MarginLayoutParams).leftMargin = (allItems.get(position).levelRecusion * 20 * density + 0.5f).toInt() + 30;
 
                 //------------------------------
 
@@ -266,7 +295,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                 //Related Progressbar
 
-                var difference:Double=0.toDouble()
+                var difference: Double = 0.toDouble()
 
                 //RemainingTime==-1 or (not) it is not important
                 //Total of timer always is endTime - startTime --> Because when initing new task
@@ -279,37 +308,36 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                 difference = (endTimeProgressBar.time - startTimeProgressBar.time).toDouble()
 
-                holder.progressBarTask.max=100
+                holder.progressBarTask.max = 100
 
-                var itemRemainngTimerIncludeSubItem:Long=0
+                var itemRemainngTimerIncludeSubItem: Long = 0
 
                 //If current item has childs then we caculate (all childs remaining Timers)
 //                itemRemainngTimerIncludeSubItem=caculateAllRemainingTimeOfChilds(item,allItems)
 
-                var percentTimer:Long=0
+                var percentTimer: Long = 0
 
                 //If parent task hasn't run
                 //We must caculate all (working timer) of (all childs of its)
-                if(!item.hasChildren()){
-                    if(item.remainingTime==-1.toLong()){
+                if (!item.hasChildren()) {
+                    if (item.remainingTime == -1.toLong()) {
 
-                        percentTimer=0
+                        percentTimer = 0
 
-                    }else{
+                    } else {
 
-                        percentTimer=Math.round((difference-item.remainingTime)/difference*100)
+                        percentTimer = Math.round((difference - item.remainingTime) / difference * 100)
 
                     }
+                } else {
+
+                    percentTimer = Math.round((caculateAllRemainingTimeOfChilds(item, allItems) / difference * 100))
+
                 }
-                else{
 
-                    percentTimer=Math.round((caculateAllRemainingTimeOfChilds(item,allItems)/difference*100))
+                holder.progressBarTask.progress = percentTimer.toInt()
 
-                }
-
-                holder.progressBarTask.progress=percentTimer.toInt()
-
-                holder.tvPercentTask.setText(percentTimer.toString()+"%")
+                holder.tvPercentTask.setText(percentTimer.toString() + "%")
 
                 //Each time we tap on the RecycleView
                 // onTouchListener() will update adapter of RecycleView
@@ -353,64 +381,64 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
     }
 
     //This function is used to caculate all remaining time childs
-    fun caculateAllRemainingTimeOfChilds(currentTime:Event, allItems: ArrayList<Event>):Long{
+    fun caculateAllRemainingTimeOfChilds(currentTime: Event, allItems: ArrayList<Event>): Long {
 
-        var finalTotal:Long=0
+        var finalTotal: Long = 0
 
-        for(i in allItems){
+        for (i in allItems) {
 
             //Getting (current item) from (allitems)
-            if(i.hashId.equals(currentTime.hashId)){
+            if (i.hashId.equals(currentTime.hashId)) {
 
-                var totalchilds=0.toLong()
+                var totalchilds = 0.toLong()
 
-                var workingTimeOfCurrenTask:Long=0
+                var workingTimeOfCurrenTask: Long = 0
 
-                if(i.hasChildren()){
+                if (i.hasChildren()) {
 
-                    for (child in i.children){
+                    for (child in i.children) {
 
-                        totalchilds+=caculateAllRemainingTimeOfChilds(child as Event,i.children as ArrayList<Event>)
+                        totalchilds += caculateAllRemainingTimeOfChilds(child as Event, i.children as ArrayList<Event>)
 
                         child as Event
 
                         //It is used to hold (all interval time of childs)
-                        var totalIntervalStartEndTime=0.toLong()
+                        var totalIntervalStartEndTime = 0.toLong()
 
                         //This is used to updating workingTime of (a current task) each times
-                        for(subOfSubItem in i.children){
+                        for (subOfSubItem in i.children) {
 
                             subOfSubItem as Event
 
-                            var formatter=SimpleDateFormat("HH:mm")
+                            var formatter = SimpleDateFormat("HH:mm")
 
-                            var startTime=formatter.parse(subOfSubItem.startTime)
+                            var startTime = formatter.parse(subOfSubItem.startTime)
 
-                            var endTime=formatter.parse(subOfSubItem.endTime)
+                            var endTime = formatter.parse(subOfSubItem.endTime)
 
-                            totalIntervalStartEndTime+=endTime.time-startTime.time
+                            totalIntervalStartEndTime += endTime.time - startTime.time
 
                         }
 
                         //Hold all (inteval time) of (the current child task)
-                        var formatter=SimpleDateFormat("HH:mm")
+                        var formatter = SimpleDateFormat("HH:mm")
 
-                        var startTime=formatter.parse(i.startTime)
+                        var startTime = formatter.parse(i.startTime)
 
-                        var endTime=formatter.parse(i.endTime)
+                        var endTime = formatter.parse(i.endTime)
 
-                        var difference=endTime.time-startTime.time
+                        var difference = endTime.time - startTime.time
 
                         //this parameter is used to save (total of all childs interval time)
 //                        totalIntervalTimeOfChildTasks+=difference
 
                         //If (remainintTime ==-1) it means that this (current child) task (has run)
-                        if(i.remainingTime!=-1.toLong()&&i.remainingTime!=difference-totalIntervalStartEndTime){
+                        if (i.remainingTime != -1.toLong() && i.remainingTime != difference - totalIntervalStartEndTime) {
 
                             //We holds (all time) of (current task)
                             // - (total (all times) of child tasks)
                             // - (remainingTime)
-                            totalchilds+=difference-totalIntervalStartEndTime-i.remainingTime
+                            totalchilds += difference - totalIntervalStartEndTime - i.remainingTime
 
                         }
 
@@ -421,26 +449,26 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                 //Updating ignores Category
                 //For child task hasn't childs
                 // (child has run but not having subchild task)
-                if(!i.hasChildren()&&i.type!=0){
+                if (!i.hasChildren() && i.type != 0) {
 
                     //These lines are used to caculate working time of current task
-                    var formatter=SimpleDateFormat("HH:mm")
+                    var formatter = SimpleDateFormat("HH:mm")
 
-                    var startTime=formatter.parse(i.startTime)
+                    var startTime = formatter.parse(i.startTime)
 
-                    var endTime=formatter.parse(i.endTime)
+                    var endTime = formatter.parse(i.endTime)
 
-                    var difference=endTime.time-startTime.time
+                    var difference = endTime.time - startTime.time
 
-                    if(i.remainingTime!=-1.toLong()&&i.remainingTime!=difference){
+                    if (i.remainingTime != -1.toLong() && i.remainingTime != difference) {
 
-                        workingTimeOfCurrenTask=difference-i.remainingTime
+                        workingTimeOfCurrenTask = difference - i.remainingTime
 
                     }
 
                 }
 
-                finalTotal+=totalchilds+workingTimeOfCurrenTask
+                finalTotal += totalchilds + workingTimeOfCurrenTask
 
             }
         }
@@ -562,13 +590,27 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         var colorCircle: ColorCircle?
         lateinit var imgDone: ImageView
         lateinit var imgPlay: ImageView
-        lateinit var mExpandIcon:ImageView
-        lateinit var mExpandButton:LinearLayout
+        lateinit var mExpandIcon: ImageView
+        lateinit var mExpandButton: LinearLayout
 
-        lateinit var tvPercentTask:TextView
-        lateinit var progressBarTask:ProgressBar
+        lateinit var tvPercentTask: TextView
+        lateinit var progressBarTask: ProgressBar
 
         private val onEditMenu = MenuItem.OnMenuItemClickListener { item ->
+
+            var sharePreferences = context.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE)
+
+            var idUser = sharePreferences.getString("hashidUser", "")
+
+            if (!allItems.get(adapterPosition).hashIdUser.equals(idUser)) {
+
+                //Don't allow to execute any operations
+                Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
+
+                return@OnMenuItemClickListener false
+
+            }
+
             when (item.itemId) {
                 0 -> hideOrShowListener.setHideOrShow(allItems!!.get(adapterPosition), true)
                 1 -> {
@@ -576,18 +618,18 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     //Delete task from (this current position)
                     //Delete this task is refer to (delete) it's (all childs)
 
-                    var currentDeletingItem=allItems.get(adapterPosition)
+                    var currentDeletingItem = allItems.get(adapterPosition)
 
                     //If current task has (a parent task)
-                    if(!currentDeletingItem.parentId.equals("")){
+                    if (!currentDeletingItem.parentId.equals("")) {
 
-                        var parentId=allItems.get(adapterPosition).parentId
+                        var parentId = allItems.get(adapterPosition).parentId
 
-                        var parentEvent=dbHandler.getEventId(parentId)
+                        var parentEvent = dbHandler.getEventId(parentId)
 
                         //In order to check whether any task has run
                         //(RemainingTime ==-1) and (difference - total of interval time child != remainingTime)
-                        parentEvent!!.remainingTime+=updatingAllChildsWhenDeleting(currentDeletingItem)
+                        parentEvent!!.remainingTime += updatingAllChildsWhenDeleting(currentDeletingItem)
 
                         //Updating (the parent) of (a current task)
                         dbHandler.updateEvent(parentEvent!!)
@@ -597,19 +639,19 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                         //Updating (remainingTime) of (the parent) of (the current item)
                         allItems.forEach { item: Event ->
-                            if(item.hashId.equals(currentDeletingItem.parentId)){
+                            if (item.hashId.equals(currentDeletingItem.parentId)) {
 
-                                item.remainingTime=parentEvent!!.remainingTime
+                                item.remainingTime = parentEvent!!.remainingTime
 
                             }
                         }
 
                         //Delete all childs corresponding to (all items are changed by the library)
-                        deleteNextAllChildTask(dbHandler,allItems,adapterPosition,0)
+                        deleteNextAllChildTask(dbHandler, allItems, adapterPosition, 0)
 
                         //If we put this line here --> it causes errors
                         //delete all childs of current item in the list
-                        findIdOfTask(allItems,currentDeletingItem.parentId,currentDeletingItem.levelRecusion,currentDeletingItem)
+                        findIdOfTask(allItems, currentDeletingItem.parentId, currentDeletingItem.levelRecusion, currentDeletingItem)
 
                         //If currentDeleltingItem via two funtions that hasn't been deleted --> Delete
                         allItems.remove(currentDeletingItem)
@@ -620,7 +662,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 //                    deleteAllChilds(dbHandler,allItems.get(adapterPosition))
 //
                     //In case, (levelRecusion=0) (the most huge parent)
-                    if(currentDeletingItem.parentId.equals("")) {
+                    if (currentDeletingItem.parentId.equals("")) {
 
 
                         //This code must put before (deleteAllchildsOfAnyMostParent)
@@ -628,10 +670,10 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
 //                        //If we put this line here --> it causes errors
 //                        //delete all childs of current item in the list
-                        deleteAllchildsOfAnyMostParentRecusive(dbHandler,allItems,allItems!!.get(adapterPosition))
+                        deleteAllchildsOfAnyMostParentRecusive(dbHandler, allItems, allItems!!.get(adapterPosition))
 
                         //This line to (remove child items) (when expanding)
-                        deleteAlllChildsIfExpansion(allItems,allItems.get(adapterPosition),adapterPosition)
+                        deleteAlllChildsIfExpansion(allItems, allItems.get(adapterPosition), adapterPosition)
 
                         //Remove (current item)
                         dbHandler.removeEvent(allItems!!.get(adapterPosition).hashId)
@@ -639,7 +681,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                         //Remove (current item) from Realtime database
                         eventDatabase.child(allItems!!.get(adapterPosition).hashId).removeValue()
 
-                        AlarmReceiver().cancelAlarm(context,allItems.get(adapterPosition).requestCode)
+                        AlarmReceiver().cancelAlarm(context, allItems.get(adapterPosition).requestCode)
 
                         allItems.removeAt(adapterPosition)
 
@@ -654,20 +696,20 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     hideOrShowListener.refreshAllEventFragment()
 
                 }
-                2->{
+                2 -> {
 
-                    var currentItem=allItems.get(adapterPosition)
+                    var currentItem = allItems.get(adapterPosition)
 
-                    if(currentItem.isDone==-1&&currentItem.remainingTime==-1.toLong()){
+                    if (currentItem.isDone == -1 && currentItem.remainingTime == -1.toLong()) {
 
                         var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("HH:mm");
 
                         var startTime = simpleDateFormat.parse(currentItem.startTime);
-                        var endTime= simpleDateFormat.parse(currentItem.endTime);
+                        var endTime = simpleDateFormat.parse(currentItem.endTime);
 
                         var difference = (endTime.time - startTime.time).toDouble()
 
-                        currentItem.remainingTime=difference.toLong()
+                        currentItem.remainingTime = difference.toLong()
 
                         dbHandler.updateEvent(currentItem)
 
@@ -675,16 +717,15 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                         //This causes (percent is negative)
                         eventDatabase.child("${currentItem.hashId}/remainingTime").setValue(currentItem.remainingTime)
 
-                        hideOrShowListener.createNewSubTask(currentItem,currentItem.levelRecusion+1)
+                        hideOrShowListener.createNewSubTask(currentItem, currentItem.levelRecusion + 1)
 
-                    }else if(currentItem.remainingTime<1000*60){
+                    } else if (currentItem.remainingTime < 1000 * 60) {
 
-                        Toast.makeText(context,"Tác vụ còn lại thời gian dưới 1 phút không thể tạo tác vụ con với thời gian nhỏ hơn", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Tác vụ còn lại thời gian dưới 1 phút không thể tạo tác vụ con với thời gian nhỏ hơn", Toast.LENGTH_SHORT).show()
 
-                    }
-                    else{
+                    } else {
 
-                        hideOrShowListener.createNewSubTask(currentItem,currentItem.levelRecusion+1)
+                        hideOrShowListener.createNewSubTask(currentItem, currentItem.levelRecusion + 1)
 
                         hideOrShowListener.refreshAllEventFragment()
 
@@ -711,7 +752,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                         //Returns the (Adapter position) of the item represented by this ViewHolder.
                         //Note that this might be (different than) the <getLayoutPosition>()
                         // if there are (pending adapter updates) but a (new layout pass) has not happened yet.
-                        AlertDialog.Builder(context, R.style.MyDialogTheme).setMessage("Tác vụ vị trí $adapterPosition còn ${splitToComponentTimes(allItems.get(adapterPosition).remainingTime/1000)} " +
+                        AlertDialog.Builder(context, R.style.MyDialogTheme).setMessage("Tác vụ vị trí $adapterPosition còn ${splitToComponentTimes(allItems.get(adapterPosition).remainingTime / 1000)} " +
                                 "bạn có muốn tiếp tục?").setPositiveButton("Có", DialogInterface.OnClickListener { dialog, which ->
                             hideOrShowListener.continueTask(allItems.get(adapterPosition))
                         }).setNegativeButton("Không", null).show()
@@ -725,42 +766,42 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
         //new conclusion: object always refer to same (memory cell)
         //Updating base on (remaining Time) and (don't care) about (working time)
-        fun updatingAllChildsWhenDeleting(currentDeletingItem: Event):Long{
+        fun updatingAllChildsWhenDeleting(currentDeletingItem: Event): Long {
 
-            var totalUpdating:Long=0
+            var totalUpdating: Long = 0
 
             //If we recusive to (a final recursion)
-            if(!currentDeletingItem.hasChildren()){
+            if (!currentDeletingItem.hasChildren()) {
 
-                if(currentDeletingItem.remainingTime!=-1.toLong()){
+                if (currentDeletingItem.remainingTime != -1.toLong()) {
 
                     return currentDeletingItem.remainingTime
 
-                }else{
-                    var formatter=SimpleDateFormat("HH:mm")
+                } else {
+                    var formatter = SimpleDateFormat("HH:mm")
 
-                    var startTime=formatter.parse(currentDeletingItem.startTime)
+                    var startTime = formatter.parse(currentDeletingItem.startTime)
 
-                    var endTime=formatter.parse(currentDeletingItem.endTime)
+                    var endTime = formatter.parse(currentDeletingItem.endTime)
 
-                    return endTime.time-startTime.time
+                    return endTime.time - startTime.time
                 }
 
             }
 
-            for(child in currentDeletingItem.children){
+            for (child in currentDeletingItem.children) {
 
-                var remainingTimeChild=updatingAllChildsWhenDeleting(child as Event)
+                var remainingTimeChild = updatingAllChildsWhenDeleting(child as Event)
 
-                if(child.remainingTime!=-1.toLong()){
+                if (child.remainingTime != -1.toLong()) {
 
-                    totalUpdating+=remainingTimeChild
+                    totalUpdating += remainingTimeChild
 
                 }
 
             }
 
-            currentDeletingItem.remainingTime+=totalUpdating
+            currentDeletingItem.remainingTime += totalUpdating
 
             return currentDeletingItem.remainingTime
 
@@ -781,8 +822,21 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
             imgDone = itemView.findViewById(R.id.imgDone)
             imgPlay = itemView.findViewById(R.id.imgPlay)
 
+            var sharePreferences = context.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE)
+
+            var idUser = sharePreferences.getString("hashidUser", "")
+
             imgPlay.setOnClickListener(object : View.OnClickListener {
+
                 override fun onClick(v: View?) {
+
+                    if(!allItems.get(adapterPosition).hashIdUser.equals(idUser)){
+
+                        Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
+
+                        return
+
+                    }
 
                     //If remainingTime==0 --> done
                     //If remainingTime==-1 --> is not run
@@ -804,7 +858,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                         //Returns the (Adapter position) of the item represented by this ViewHolder.
                         //Note that this might be (different than) the <getLayoutPosition>()
                         // if there are (pending adapter updates) but a (new layout pass) has not happened yet.
-                        AlertDialog.Builder(context, R.style.MyDialogTheme).setMessage("Tác vụ vị trí $adapterPosition còn ${splitToComponentTimes(allItems.get(adapterPosition).remainingTime/1000)} " +
+                        AlertDialog.Builder(context, R.style.MyDialogTheme).setMessage("Tác vụ vị trí $adapterPosition còn ${splitToComponentTimes(allItems.get(adapterPosition).remainingTime / 1000)} " +
                                 "bạn có muốn tiếp tục?").setPositiveButton("Có", DialogInterface.OnClickListener { dialog, which ->
                             hideOrShowListener.continueTask(allItems.get(adapterPosition))
                         }).setNegativeButton("Không", null).show()
@@ -814,23 +868,23 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
             })
 
-            mExpandIcon=itemView.findViewById(R.id.mExpandIcon)
+            mExpandIcon = itemView.findViewById(R.id.mExpandIcon)
 
-            mExpandButton=itemView.findViewById(R.id.expand_field)
+            mExpandButton = itemView.findViewById(R.id.expand_field)
 
-            tvPercentTask=itemView.findViewById(R.id.tvPercentTask)
-            progressBarTask=itemView.findViewById(R.id.progressBarTask)
+            tvPercentTask = itemView.findViewById(R.id.tvPercentTask)
+            progressBarTask = itemView.findViewById(R.id.progressBarTask)
 
-            mExpandButton.setOnClickListener(object:View.OnClickListener{
+            mExpandButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
 
                     mMultiLevelRecyclerView.toggleItemsGroup(adapterPosition)
 
-                    if(allItems.get(adapterPosition).isExpanded){
+                    if (allItems.get(adapterPosition).isExpanded) {
 
                         mExpandIcon.animate().rotation(-180.toFloat()).start()
 
-                    }else{
+                    } else {
 
                         mExpandIcon.animate().rotation(0.toFloat()).start()
 
@@ -859,7 +913,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
             menu.setHeaderTitle("Chọn tác vụ")
             val Edit = menu.add(Menu.NONE, 0, 0, context.resources.getString(R.string.menu_edit))
             val Delete = menu.add(Menu.NONE, 1, 0, context.resources.getString(R.string.menu_delete))
-            var addNewSubEvent= menu.add(Menu.NONE,2,0,context.resources.getString(R.string.add_sub_task))
+            var addNewSubEvent = menu.add(Menu.NONE, 2, 0, context.resources.getString(R.string.add_sub_task))
             val continueTask = menu.add(Menu.NONE, 3, 0, context.resources.getString(R.string.menu_continue))
             Edit.setOnMenuItemClickListener(onEditMenu)
             Delete.setOnMenuItemClickListener(onEditMenu)
@@ -873,7 +927,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         fun setHideOrShow(item: Event, isEdit: Boolean)
         fun showEditCategoryDialog(category: Category)
         fun continueTask(item: Event)
-        fun createNewSubTask(item: Event,level:Int)
+        fun createNewSubTask(item: Event, level: Int)
         fun refreshAllEventFragment()
     }
 
@@ -884,7 +938,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
         val CATEGORY_TYPE = 0
     }
 
-    fun splitToComponentTimes(biggy:Long):String{
+    fun splitToComponentTimes(biggy: Long): String {
 
         val longVal = biggy
         val hours = longVal / 3600
@@ -897,35 +951,35 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
     }
 
-    fun findIdOfTask(listItem:ArrayList<Event>,parentId:String,levelRecursive:Int,currentDeletingItem:Event){
+    fun findIdOfTask(listItem: ArrayList<Event>, parentId: String, levelRecursive: Int, currentDeletingItem: Event) {
 
-        for(item in listItem){
+        for (item in listItem) {
 
-            if(item.levelRecusion!=levelRecursive-1){
+            if (item.levelRecusion != levelRecursive - 1) {
 
-                if(item.hasChildren()) {
+                if (item.hasChildren()) {
 
-                    findIdOfTask(item.children as ArrayList<Event>,parentId,levelRecursive,currentDeletingItem)
+                    findIdOfTask(item.children as ArrayList<Event>, parentId, levelRecursive, currentDeletingItem)
 
                 }
 
-            }else{
-                if(item.hashId.equals(parentId)){
+            } else {
+                if (item.hashId.equals(parentId)) {
 
-                    for(i in item.children){
+                    for (i in item.children) {
 
-                        if((i as Event).hashId.equals(currentDeletingItem.hashId)){
+                        if ((i as Event).hashId.equals(currentDeletingItem.hashId)) {
 
-                            var indexOfParent=listItem.indexOf(item)
+                            var indexOfParent = listItem.indexOf(item)
 
-                            var subItem=i as Event
+                            var subItem = i as Event
 
                             //Get (position) of list of child items in childs of (parent items)
-                            var index=item.children.indexOf(subItem)
+                            var index = item.children.indexOf(subItem)
 
                             //TO delete all --> must use (t object)
                             //Delete all childs of (deleting current task)
-                            if(listItem.get(indexOfParent).children.get(index).children!=null){
+                            if (listItem.get(indexOfParent).children.get(index).children != null) {
 
                                 listItem.get(indexOfParent).children.get(index).children.clear()
 
@@ -946,34 +1000,34 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
     }
 
-    fun deleteAlllChildsIfExpansion(allItems: ArrayList<Event>, parentId: Event, position: Int){
+    fun deleteAlllChildsIfExpansion(allItems: ArrayList<Event>, parentId: Event, position: Int) {
 
-        if(allItems.size>position+1&&allItems.get(position+1).parentId.equals(parentId.hashId)){
+        if (allItems.size > position + 1 && allItems.get(position + 1).parentId.equals(parentId.hashId)) {
 
-            if(allItems.size>position+2) deleteAlllChildsIfExpansion(allItems,allItems.get(position+1),position+1)
+            if (allItems.size > position + 2) deleteAlllChildsIfExpansion(allItems, allItems.get(position + 1), position + 1)
 
             //Cancel alarm base on id
-            AlarmReceiver().cancelAlarm(context,allItems.get(position+1).requestCode)
+            AlarmReceiver().cancelAlarm(context, allItems.get(position + 1).requestCode)
 
-            allItems.removeAt(position+1)
+            allItems.removeAt(position + 1)
 
         }
 
     }
 
     //Delete (all childs<Recursion>) of (the most parent task) --> Not expand
-    fun deleteAllchildsOfAnyMostParentRecusive(dbHandler: ReminderDatabase,allItems: ArrayList<Event>, parentId: Event){
+    fun deleteAllchildsOfAnyMostParentRecusive(dbHandler: ReminderDatabase, allItems: ArrayList<Event>, parentId: Event) {
 
-        var postionParent=allItems.indexOf(parentId)
+        var postionParent = allItems.indexOf(parentId)
 
         //Parent hasn't any childs
-        if(parentId.children!=null){
+        if (parentId.children != null) {
             //Delete all childs from database
-            for(item in parentId.children){
+            for (item in parentId.children) {
 
                 item as Event
 
-                if(item.hasChildren()){
+                if (item.hasChildren()) {
 
                     deleteAllchildsOfAnyMostParentRecusive(dbHandler, item.children as ArrayList<Event>, item)
 
@@ -991,7 +1045,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
         //This here can be caused error when deleting item not having any child but it is parent item having level=0
         //Delete all child from parent
-        if(postionParent!=-1&&parentId.children!=null) allItems.get(postionParent).children.clear()
+        if (postionParent != -1 && parentId.children != null) allItems.get(postionParent).children.clear()
 
         //Deletign (parent event) from database
         dbHandler.removeEvent(parentId.hashId)
@@ -1001,14 +1055,14 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
     }
 
-    fun deleteNextAllChildTask(dbHandler: ReminderDatabase, allItems: ArrayList<Event>, position: Int,count:Int){
+    fun deleteNextAllChildTask(dbHandler: ReminderDatabase, allItems: ArrayList<Event>, position: Int, count: Int) {
 
-        var i=allItems.get(position)
+        var i = allItems.get(position)
 
         //Cancel (all alarm childs)
         AlarmReceiver().cancelAlarm(context, i.requestCode)
 
-        if(count!=0) {
+        if (count != 0) {
 
             allItems.removeAt(position)
 
@@ -1023,8 +1077,8 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
         //Checking whether current item has child
         //Then (deleting) (all childs) of it
-        if(i.hasChildren()){
-            deleteNextAllChildTask(dbHandler, allItems, position,count+1)
+        if (i.hasChildren()) {
+            deleteNextAllChildTask(dbHandler, allItems, position, count + 1)
         }
 
     }

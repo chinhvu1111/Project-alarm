@@ -1,6 +1,7 @@
 package com.e15.alarmnats.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -245,6 +246,11 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                                 editor.putString("username","")
 
                                 editor.putString("Email","")
+
+                                //Delete adding realtime database to SQLite database
+                                var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE).edit()
+
+                                sharedPreferences.putBoolean("isAddingDbfromRealtime",false)
 
 //                                //Sign in immediately
 //                                oldauth.signInWithEmailAndPassword(oldEmail!!,oldPassword).addOnCompleteListener(object:OnCompleteListener<AuthResult>{

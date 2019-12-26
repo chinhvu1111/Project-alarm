@@ -79,7 +79,7 @@
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="Lưu"
             android:textStyle="bold"
             android:gravity="bottom|center_horizontal"
             android:textColor="@color/colorAqua"

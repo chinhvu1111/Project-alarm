@@ -71,6 +71,8 @@ class CategoryFragment : Fragment() {
     //this (field) is used in (local location of this file)
     var currentHashId: String = ""
 
+    lateinit var progressLoadTask:RelativeLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,6 +92,8 @@ class CategoryFragment : Fragment() {
         queryGetIdUser = databaseUser.orderByChild("email").equalTo(currentUser!!.email)
 
         groupDatabase = firebaseDatabase.getReference("Group")
+
+//        progressLoadTask=view!!.findViewById(R.id.progressLoadTask)
 
         dbHandler = ReminderDatabase(this!!.context!!)
 
@@ -159,6 +163,9 @@ class CategoryFragment : Fragment() {
                                 //Note that: This item has (CATEGORY_TYPE)
                                 val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
 
+                                //checking block operation
+//                                categoryItem.hashIdUser=category.hashIdUser
+
                                 //Add item has CATEGORY_TYPE
                                 var loopingForAddingNewTypeEvent = ArrayList<Event>()
 
@@ -189,6 +196,7 @@ class CategoryFragment : Fragment() {
                                     eventItem.remainingTime = e.remainingTime
                                     eventItem.levelRecusion = e.levelRecusion
                                     eventItem.parentId = e.parentId
+                                    eventItem.hashIdUser=e.hashIdUser
                                     eventItem.addChildren(e.children)
 
                                     loopingForAddingNewTypeEvent.add(eventItem)

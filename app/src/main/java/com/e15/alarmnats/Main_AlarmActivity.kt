@@ -1,5 +1,6 @@
 package com.e15.alarmnats
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +16,8 @@ import com.e15.alarmnats.Model.Event
 import com.e15.alarmnats.Model.EventFb
 import com.e15.alarmnats.activity.*
 import com.e15.alarmnats.activity.TaskManagementActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import java.io.File
 
@@ -34,72 +37,41 @@ class Main_AlarmActivity : AppCompatActivity() {
 
     lateinit var layoutSetting: RelativeLayout;
 
-    lateinit var layoutGroup:RelativeLayout
+    lateinit var layoutGroup: RelativeLayout
 
-    lateinit var firebaseDatabase:FirebaseDatabase
+    lateinit var firebaseDatabase: FirebaseDatabase
 
-    lateinit var eventDatabase:DatabaseReference
+    lateinit var eventDatabase: DatabaseReference
 
-    lateinit var categoryDatabase:DatabaseReference
+    lateinit var categoryDatabase: DatabaseReference
 
-    lateinit var dbHandler:ReminderDatabase
+    lateinit var userDatabase: DatabaseReference
+
+    lateinit var dbHandler: ReminderDatabase
+
+    lateinit var auth: FirebaseAuth
+
+    var currentUser: FirebaseUser?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_alarm)
 
-        dbHandler= ReminderDatabase(applicationContext)
+        dbHandler = ReminderDatabase(applicationContext)
 
-        firebaseDatabase= FirebaseDatabase.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
 
-        eventDatabase=firebaseDatabase.getReference("Events")
+        eventDatabase = firebaseDatabase.getReference("Events")
 
-        categoryDatabase=firebaseDatabase.getReference("Category")
+        categoryDatabase = firebaseDatabase.getReference("Category")
 
-        if(!checkDatabase()){
+        userDatabase = firebaseDatabase.getReference("User")
 
-            categoryDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
-                override fun onCancelled(p0: DatabaseError) {
+        auth = FirebaseAuth.getInstance()
 
-                }
+        currentUser = auth.currentUser
 
-                override fun onDataChange(p0: DataSnapshot) {
-
-                    for(ca in p0.children){
-
-                        var category=ca.getValue(Category::class.java)
-
-                        dbHandler.createNewCategory(category!!)
-
-                    }
-
-                }
-            })
-
-            eventDatabase.addListenerForSingleValueEvent(object:ValueEventListener{
-                override fun onCancelled(p0: DatabaseError) {
-
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-
-                    for(e in p0.children){
-
-                        var eventFb=e.getValue(EventFb::class.java)
-
-                        var event=Event(eventFb!!,eventFb!!.levelRecusion)
-
-                        dbHandler.createNewEvent(event)
-
-                    }
-
-                }
-
-            })
-
-            Toast.makeText(applicationContext,"Đồng bộ cơ sở dữ liệu thành công!",Toast.LENGTH_SHORT).show()
-
-        }
+        addingDb()
 
         layoutRemindItem = findViewById(R.id.layoutRemindItem)
 
@@ -115,7 +87,7 @@ class Main_AlarmActivity : AppCompatActivity() {
 
         layoutSetting = findViewById(R.id.layoutSetting)
 
-        layoutGroup=findViewById(R.id.layoutGroup)
+        layoutGroup = findViewById(R.id.layoutGroup)
 
         var unwrapperDrawable1 = AppCompatResources.getDrawable(applicationContext, R.drawable.background_item_main_application)
 
@@ -181,6 +153,111 @@ class Main_AlarmActivity : AppCompatActivity() {
 
         layoutGroup.background = wrapperDrawable8
 
+    }
+
+    fun addingDb(){
+
+        var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE)
+
+        var isAddingDbFromRealtimeDbFirst=sharedPreferences.getBoolean("isAddingDbfromRealtime",false)
+
+        if (!isAddingDbFromRealtimeDbFirst&&currentUser != null) {
+
+            userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    //Drop db of (current User)/(before user) then adding new database of current User
+                    dbHandler.dropDb()
+
+                    var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE).edit()
+
+                    sharedPreferences.putBoolean("isAddingDbfromRealtime",true)
+
+                    sharedPreferences.commit()
+
+                    var dataUser=p0.children.iterator().next()
+
+                    var idUser=dataUser.key.toString()
+
+                    var editor=applicationContext.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE).edit()
+
+                    editor.putString("hashidUser",idUser)
+
+                    editor.commit()
+
+                    categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (ca in p0.children) {
+
+                                var category = ca.getValue(Category::class.java)
+
+                                if(category!!.hashIdUser.equals(idUser))dbHandler.createNewCategory(category!!)
+
+                            }
+
+                        }
+                    })
+
+                    eventDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (e in p0.children) {
+
+                                var eventFb = e.getValue(EventFb::class.java)
+
+                                var event = Event(eventFb!!, eventFb!!.levelRecusion)
+
+                                if(event.hashIdUser.equals(idUser))dbHandler.createNewEvent(event)
+
+                            }
+
+                        }
+
+                    })
+
+                    Toast.makeText(applicationContext, "Đồng bộ cơ sở dữ liệu thành công!", Toast.LENGTH_SHORT).show()
+
+                }
+
+            })
+
+        }else{
+
+            userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    var dataUser=p0.children.iterator().next()
+
+                    var idUser=dataUser.key.toString()
+
+                    var editor=applicationContext.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE).edit()
+
+                    editor.putString("hashidUser",idUser)
+
+                    editor.commit()
+
+                }
+
+            })
+
+        }
     }
 
     fun checkDatabase(): Boolean {
@@ -250,21 +327,21 @@ class Main_AlarmActivity : AppCompatActivity() {
 
         var intent = Intent(applicationContext, TimerActivity::class.java)
 
-        intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        intent.putExtra("fromClass","Main_AlarmActivity")
+        intent.putExtra("fromClass", "Main_AlarmActivity")
 
         startActivity(intent)
 
     }
 
-    fun navigateToGroup(view:View){
+    fun navigateToGroup(view: View) {
 
         var intent = Intent(applicationContext, TeamWorkManagementActivity::class.java)
 
-        intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        intent.putExtra("fromClass","Main_AlarmActivity")
+        intent.putExtra("fromClass", "Main_AlarmActivity")
 
         startActivity(intent)
 
