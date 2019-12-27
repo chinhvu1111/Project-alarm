@@ -23,6 +23,8 @@ class TeamWorkManagementActivity : AppCompatActivity() {
 
     lateinit var groupFragment:Fragment
 
+    lateinit var chatFragment:Fragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_team_work_management)
@@ -50,6 +52,13 @@ class TeamWorkManagementActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
 
             when(position){
+                0->{
+
+                    chatFragment=ChatActivity()
+
+                    return chatFragment
+
+                }
                 1->{
                     groupFragment=GroupTask()
 

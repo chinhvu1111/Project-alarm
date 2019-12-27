@@ -15,6 +15,8 @@ import com.e15.alarmnats.Database.ReminderDatabase
 import com.e15.alarmnats.R
 import com.e15.alarmnats.fragment.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -28,6 +30,10 @@ class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var dbHandler:ReminderDatabase
 
+    lateinit var firebaseDatabase:FirebaseDatabase
+
+    lateinit var eventDatabase:DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eisen_hower)
@@ -35,6 +41,10 @@ class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
         fab = findViewById(R.id.fab_add)
 
         fab.setOnClickListener(this)
+
+        firebaseDatabase= FirebaseDatabase.getInstance()
+
+        eventDatabase=firebaseDatabase.getReference("Events")
 
         initUI()
 
@@ -77,6 +87,9 @@ class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
 
                 backEvent!!.isDone=1;
 
+                eventDatabase.ref.child("$id/remainingTime").setValue(backEvent.remainingTime)
+                eventDatabase.ref.child("$id/done").setValue(backEvent.isDone)
+
                 dbHandler!!.updateEvent(backEvent!!);
 
                 Toast.makeText(applicationContext,"Tác vụ hoàn thành!", Toast.LENGTH_SHORT).show()
@@ -87,9 +100,11 @@ class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
 
             }else{
 
+                eventDatabase.ref.child("$id/remainingTime").setValue(backEvent!!.remainingTime)
+
                 dbHandler!!.updateEvent(backEvent!!);
 
-                Toast.makeText(applicationContext,"Cập nhập xong tác vụ còn lại $remainingTimer mili giây!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Cập nhập xong tác vụ còn lại ${splitToComponentTimes(remainingTimer / 1000)}!", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -208,6 +223,19 @@ class EisenHowerActivity : AppCompatActivity(), View.OnClickListener {
             }
 
         })
+
+    }
+
+    fun splitToComponentTimes(biggy: Long): String {
+
+        val longVal = biggy
+        val hours = longVal / 3600
+        var remainder = longVal - hours * 3600
+        val mins = remainder / 60
+        remainder = remainder - mins * 60
+        val secs = remainder
+
+        return "$hours giờ $mins phút và $secs giây"
 
     }
 

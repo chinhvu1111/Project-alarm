@@ -120,19 +120,19 @@ class GroupsAdapter : RecyclerView.Adapter<ViewHolderGroup> {
         //set image for group
         var imgIconGroup = holder.imgIconGroup
 
-        if (checkPermissionREAD_EXTERNAL_STORAGE(context)) {
-
-//            var imageUri = Uri.parse(listGroup.get(position).path)
+//        if (checkPermissionREAD_EXTERNAL_STORAGE(context)) {
 //
-//            var imageStream = context.contentResolver.openInputStream(imageUri)
+////            var imageUri = Uri.parse(listGroup.get(position).path)
+////
+////            var imageStream = context.contentResolver.openInputStream(imageUri)
+////
+////            var yourAvatar = BitmapFactory.decodeStream(imageStream)
+////
+////            var bm = Bitmap.createScaledBitmap(yourAvatar, 100, 100, true)
+////
+////            imgIconGroup.setImageBitmap(bm)
 //
-//            var yourAvatar = BitmapFactory.decodeStream(imageStream)
-//
-//            var bm = Bitmap.createScaledBitmap(yourAvatar, 100, 100, true)
-//
-//            imgIconGroup.setImageBitmap(bm)
-
-        }
+//        }
 
         //Set name of group
         var tvNameGroup = holder.tvNameGroup

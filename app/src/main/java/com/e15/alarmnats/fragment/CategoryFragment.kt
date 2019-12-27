@@ -163,6 +163,8 @@ class CategoryFragment : Fragment() {
                                 //Note that: This item has (CATEGORY_TYPE)
                                 val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
 
+                                categoryItem.hashIdUser=category.hashIdUser
+
                                 //checking block operation
 //                                categoryItem.hashIdUser=category.hashIdUser
 
@@ -287,6 +289,8 @@ class CategoryFragment : Fragment() {
                         //Build a (CategoryItem) base (Category) (at index)
                         //Note that: This item has (CATEGORY_TYPE)
                         val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
+
+                        categoryItem.hashIdUser=category.hashIdUser
 
                         //Add item has CATEGORY_TYPE
                         allItemsEm.add(categoryItem)

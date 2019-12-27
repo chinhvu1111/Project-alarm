@@ -236,26 +236,28 @@ class Main_AlarmActivity : AppCompatActivity() {
 
         }else{
 
-            userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+            if(currentUser!=null){
+                userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
+                    }
 
-                override fun onDataChange(p0: DataSnapshot) {
+                    override fun onDataChange(p0: DataSnapshot) {
 
-                    var dataUser=p0.children.iterator().next()
+                        var dataUser=p0.children.iterator().next()
 
-                    var idUser=dataUser.key.toString()
+                        var idUser=dataUser.key.toString()
 
-                    var editor=applicationContext.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE).edit()
+                        var editor=applicationContext.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE).edit()
 
-                    editor.putString("hashidUser",idUser)
+                        editor.putString("hashidUser",idUser)
 
-                    editor.commit()
+                        editor.commit()
 
-                }
+                    }
 
-            })
+                })
+            }
 
         }
     }

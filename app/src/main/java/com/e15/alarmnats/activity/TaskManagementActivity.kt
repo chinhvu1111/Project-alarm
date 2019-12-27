@@ -149,6 +149,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
     lateinit var rdRemind: RadioButton
 
     lateinit var rdnonRemind: RadioButton
+
     lateinit var btnSetIntervalTime: Button
 
     lateinit var intervaltimeLayout: LinearLayout
@@ -908,6 +909,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
     fun showChoosingDialog() {
 
+        //get the (parent event) of current event
         var event = dbHandler!!.getEventId(currentParentId)
 
         var d = Dialog(this, R.style.MyDialogTheme)
@@ -937,10 +939,13 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
         }
 
-        hourPicker.minValue = 0
+        var totalTimeofChilds=caculatingAllTimeOfChilds(item!!)
 
+        //If updating then we need get all time (endtime - starttime) of childs
+        //To set min value of pioker
+        hourPicker.minValue = (totalTimeofChilds/10000/60/60).toInt()
 
-        minutePicker.minValue = 0
+        minutePicker.minValue = ((totalTimeofChilds-hourPicker.minValue*60*60*1000)/60/1000).toInt()
 
         hourPicker.wrapSelectorWheel = true
 
@@ -1544,7 +1549,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                 event.level = tempLevel
                 event.parentId = currentParentId
                 event.levelRecusion = currentlevel
-                event.remainingTime=item!!.remainingTime
+//                event.remainingTime=item!!.remainingTime
 
                 //If we don't enter endTime
                 if (startHour > endHour || startHour == endHour && startMinute >= endMinute) {
@@ -1643,7 +1648,6 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
                     //Subtask even have subtask of subtask
                     //We must to check whether current item has childs
-
                     var totalTimerChilds:Long=0
 
                     if(item!!.hasChildren()){
@@ -1733,7 +1737,18 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                 currentCreatingRemainingTimer = -1
                 currentParentId=""
 
-                updatingRealtimedatabase(event)
+                var formatter=SimpleDateFormat("HH:mm")
+
+                //Time without updating
+//                var beforeTimeEvent=formatter.parse(item!!.endTime).time-formatter.parse(item!!.startTime).time
+
+                //Time when updating
+                var newTimeUpdating:Long=(endHour.toLong()-startHour.toLong())*60*60*1000 + (endMinute.toLong()-startMinute.toLong())*60*1000
+
+                //Updating remaining time of current event to break event into sub event
+                event.remainingTime=newTimeUpdating-caculatingAllTimeOfChilds(item!!)
+
+                updatingRealtimedatabase(event,item!!.remainingTime,newTimeUpdating)
 
                 listenerRealtimeDatabase()
 
@@ -1759,14 +1774,9 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
     }
 
-    fun updatingRealtimedatabase(event: Event){
+    fun updatingRealtimedatabase(event: Event,beforeTimeEvent:Long, currentTimer:Long){
 
         Thread(Runnable {
-
-            //The generated (key of Events)
-            var idRt=databaseEvents.push().key
-
-            event.hashId=idRt!!
 
             queryGetIdUser.addListenerForSingleValueEvent(object:ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
@@ -1774,7 +1784,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                     var eventFb=EventFb(event)
 
                     //Getting key of event
-                    eventFb.hashId=idRt!!
+                    eventFb.hashId=event.hashId!!
 
                     //This is key group
                     var data=p0.children.iterator().next()
@@ -1791,7 +1801,28 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                     //Updating hashIdUser for old Event
                     event.hashIdUser=data.key.toString()
 
-                    eventDatabase.child("${event.hashId}").setValue(event)
+                    //-------------------------
+
+                    //Updating of (remaining time) of parent of (current event)
+                    if(!event.parentId.equals("")){
+
+                        var parentEventOfCurrentEvent=dbHandler!!.getEventId(event.parentId)
+
+                        parentEventOfCurrentEvent!!.remainingTime+=beforeTimeEvent-currentTimer
+
+                        //Updating parent of (current event) in the SQLite database
+                        dbHandler!!.updateEvent(parentEventOfCurrentEvent!!)
+
+                        var eventFbParent=EventFb(parentEventOfCurrentEvent)
+
+                        //Updating parent of (current event) in the realtime database
+                        eventDatabase.child("${parentEventOfCurrentEvent.hashId}").setValue(eventFbParent)
+
+                    }
+
+                    //-------------------------
+
+                    eventDatabase.child("${event.hashId}").setValue(eventFb)
 
                     //Updating event
                     val row = dbHandler!!.updateEvent(event)
@@ -1909,6 +1940,31 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
         }
+
+    }
+    fun caculatingAllTimeOfChilds(event:Event):Long{
+
+        var time:Long=0;
+
+        if(event.hasChildren()){
+
+            for(i in event.children){
+
+                var formatter = SimpleDateFormat("HH:mm")
+
+                var child=i as Event
+
+                var startTime=formatter.parse(child.startTime).time
+
+                var endTime=formatter.parse(child.endTime).time
+
+                time+=endTime-startTime
+
+            }
+
+        }
+
+        return time;
 
     }
 

@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E3F2FD"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
     tools:context=".activity.ChatActivity">
+
     <ScrollView
-        android:id="@+id/scrollViewGroupChat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_weight="20"
+        android:layout_height="0dp"
+        android:id="@+id/scrollView">
 
-        <RelativeLayout
-            android:layout_margin="10dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:text="sdfsdfgsdfsdfsdf"
-                android:textSize="20sp"
-                android:textColor="@android:color/background_dark"
-                android:textAllCaps="false"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/layout1">
 
+        </LinearLayout>
     </ScrollView>
-    <LinearLayout
-        android:background="@drawable/background_task_item"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:layout_gravity="center_vertical"
-            android:hint="Nhập tin nhắn ở đây!"
-            android:textColor="@android:color/white"
-            android:layout_weight="5"
-            android:id="@+id/edtMessage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-        <ImageButton
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/edtMessage"
-            android:src="@drawable/ic_send_arrow_black_24dp"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="40dp" />
-    </LinearLayout>
 
-</RelativeLayout>
+    <include
+        layout="@layout/message_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_marginTop="5dp"/>
+</LinearLayout>

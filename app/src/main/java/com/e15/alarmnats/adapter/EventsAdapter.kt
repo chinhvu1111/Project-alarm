@@ -183,9 +183,9 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                     holder.imgAddEvent.setOnClickListener {
 
-                        if(!item.hashIdUser.equals(idUser)){
+                        if (!item.hashIdUser.equals(idUser)) {
 
-                            Toast.makeText(context,"Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
 
                             return@setOnClickListener
 
@@ -374,7 +374,18 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
                     holder.tvEdit.visibility = View.INVISIBLE
                 }
 
-                holder.tvEdit.setOnClickListener { hideOrShowListener.setHideOrShow(item, true) }
+                holder.tvEdit.setOnClickListener {
+
+                    if (!item.hashIdUser.equals(idUser)) {
+
+                        Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
+
+                        return@setOnClickListener
+
+                    }
+
+                    hideOrShowListener.setHideOrShow(item, true)
+                }
 
             }
         }
@@ -830,7 +841,7 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                 override fun onClick(v: View?) {
 
-                    if(!allItems.get(adapterPosition).hashIdUser.equals(idUser)){
+                    if (!allItems.get(adapterPosition).hashIdUser.equals(idUser)) {
 
                         Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
 

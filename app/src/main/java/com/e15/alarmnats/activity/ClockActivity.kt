@@ -14,7 +14,9 @@ import com.e15.alarmnats.R
 import com.e15.alarmnats.adapter.MyPagerAdapter
 import com.e15.alarmnats.fragment.ClockFragment
 import com.e15.alarmnats.fragment.SlideFragment
+import kotlinx.android.synthetic.main.clock_layout.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 class ClockActivity : AppCompatActivity() {
 //    internal lateinit var alarm_function: ImageView
@@ -44,7 +46,6 @@ class ClockActivity : AppCompatActivity() {
 
         val pagerAdapter = MyPagerAdapter(supportFragmentManager)
         pagerAdapter.addFragment(fragmentOne)
-        pagerAdapter.addFragment(fragmentTwo)
         pagerAdapter.addFragment(framentThree)
 
         val viewPager = findViewById<View>(R.id.slidePager) as ViewPager
@@ -52,7 +53,7 @@ class ClockActivity : AppCompatActivity() {
 
         mDotLayout=findViewById(R.id.mDotLayout);
 
-        mdots= Array(3,init = {i-> TextView(this) });
+        mdots= Array(2,init = {i-> TextView(this) });
 
         for(i in 0..mdots.size-1){
 
@@ -110,27 +111,21 @@ class ClockActivity : AppCompatActivity() {
         })
 
 
-        val date = System.currentTimeMillis()
+        var calendar=Calendar.getInstance()
 
-        val sdfDate = SimpleDateFormat("MMM dd yyyy ")
-        val sdfTime = SimpleDateFormat("hh:mm")
-        val sdfGreetingTime = SimpleDateFormat("HH")
+        var timeOfDay=calendar.get(Calendar.HOUR_OF_DAY)
 
-        val dateString = sdfDate.format(date)
-        val timeString = sdfTime.format(date)
-        val greetingTimeString = sdfGreetingTime.format(date)
-
-        if (Integer.valueOf(greetingTimeString) < 12) {
+        if (timeOfDay>=0&&timeOfDay<12) {
 
             mainLayout.background=ContextCompat.getDrawable(this,R.drawable.hello_morning)
 
-        } else if (Integer.valueOf(greetingTimeString) < 17) {
+        } else if (timeOfDay>=12&&timeOfDay<16) {
 
-            mainLayout.background=ContextCompat.getDrawable(this,R.drawable.hello_evening)
+            mainLayout.background=ContextCompat.getDrawable(this,R.drawable.hello_afternoon)
 
         } else {
 
-            mainLayout.background=ContextCompat.getDrawable(this,R.drawable.hello_afternoon)
+            mainLayout.background=ContextCompat.getDrawable(this,R.drawable.hello_evening)
 
         }
 

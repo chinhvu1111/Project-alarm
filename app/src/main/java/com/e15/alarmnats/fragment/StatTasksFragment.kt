@@ -169,9 +169,13 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
                 calendar.firstDayOfWeek = Calendar.MONDAY
 
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+                //Checking
+                calendar.get(Calendar.DAY_OF_MONTH).toString()
 
-                calendar.add(Calendar.DAY_OF_WEEK, -7)
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)-7)
+
+                //Checking
+                calendar.get(Calendar.DAY_OF_MONTH).toString()
 
                 month.text = (calendar.get(Calendar.MONTH) + 1).toString()
 
@@ -191,11 +195,18 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
                 calendar.time = currentDay
 
+                //Checking
+                var x=calendar.get(Calendar.DAY_OF_MONTH).toString()
+
                 calendar.firstDayOfWeek = Calendar.MONDAY
 
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+                //DAY_OF_WEEK is days in week (monday, tuesday,...)
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)+7)
 
-                calendar.add(Calendar.DAY_OF_WEEK, 7)
+//                calendar.add(Calendar.DAY_OF_MONTH, 7)
+
+                //Checking
+                x=calendar.get(Calendar.DAY_OF_MONTH).toString()
 
                 month.text = (calendar.get(Calendar.MONTH) + 1).toString()
 
@@ -254,7 +265,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
         var format = SimpleDateFormat("MM/dd/yyyy")
 
-        var listTask = dbHandler.allEvents
+        var listTask = dbHandler.allEvents.filter { event -> event.levelRecusion==0 }
 
         var calendar = Calendar.getInstance()
 
@@ -371,7 +382,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
         var format = SimpleDateFormat("MM/dd/yyyy")
 
-        var listTask = dbHandler.allEvents
+        var listTask = dbHandler.allEvents.filter { event -> event.levelRecusion==0 }
 
         var calendar = Calendar.getInstance()
 
