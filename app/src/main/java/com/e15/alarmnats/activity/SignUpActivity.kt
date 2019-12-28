@@ -11,7 +11,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.e15.alarmnats.Main_AlarmActivity
 import com.e15.alarmnats.Model.User
 import com.e15.alarmnats.R
@@ -56,6 +58,8 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
     var oldPassword:String=""
 
+    lateinit var lnLoadProgressBar:RelativeLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -79,6 +83,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
         firebaseDatabase= FirebaseDatabase.getInstance()
 
         userDatabase=firebaseDatabase.getReference("User")
+
+        lnLoadProgressBar=findViewById(R.id.lnLoadProgressBarSignUp)
+
+        lnLoadProgressBar.isVisible=false
 
         inPassword.setOnTouchListener(object:View.OnTouchListener{
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
@@ -226,6 +234,8 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
                 } else if (!password.isEmpty() && !email.isEmpty()) {
 
+                    lnLoadProgressBar.isVisible=true
+
                     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(object : OnCompleteListener<AuthResult> {
                         override fun onComplete(p0: Task<AuthResult>) {
                             if (p0.isSuccessful) {
@@ -240,6 +250,8 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                                 Toast.makeText(applicationContext, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show()
 
                                 auth.signOut()
+
+                                lnLoadProgressBar.isVisible=false
 
                                 var editor=applicationContext.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
 
@@ -278,11 +290,15 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                                     throw p0.exception!!
                                 } catch (e: FirebaseAuthWeakPasswordException) {
 
+                                    lnLoadProgressBar.isVisible=false
+
                                     Toast.makeText(applicationContext,"Mật khẩu yếu mời nhập lại",Toast.LENGTH_SHORT).show()
 
                                     inPassword.requestFocus()
 
                                 } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                                    lnLoadProgressBar.isVisible=false
 
                                     Toast.makeText(applicationContext,"Tài khoản gmail nhập sai định dạng",Toast.LENGTH_SHORT).show()
 
@@ -290,11 +306,16 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
                                 } catch (e: FirebaseAuthUserCollisionException) {
 
+                                    lnLoadProgressBar.isVisible=false
+
                                     Toast.makeText(applicationContext,"Tài khoản đã tồn tại mời nhập lại",Toast.LENGTH_SHORT).show()
 
                                     inputEmail.requestFocus()
 
                                 } catch (e: Exception) {
+
+                                    lnLoadProgressBar.isVisible=false
+
                                     Toast.makeText(applicationContext,"Tài khoản không tồn tại/Sai mật khẩu mời nhập lại",Toast.LENGTH_SHORT).show()
 
                                     inputEmail.requestFocus()

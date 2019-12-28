@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.view.isVisible
 import com.e15.alarmnats.Database.ReminderDatabase
 import com.e15.alarmnats.Main_AlarmActivity
 import com.e15.alarmnats.Model.Category
@@ -45,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var dbHandler: ReminderDatabase
 
+    lateinit var lnLoadProgressBar:RelativeLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -70,6 +73,10 @@ class LoginActivity : AppCompatActivity() {
         btnLogin = findViewById(R.id.btnLogin)
 
         tvSignup=findViewById(R.id.tvSignup)
+
+        lnLoadProgressBar=findViewById(R.id.lnLoadProgressBarLogin)
+
+        lnLoadProgressBar.isVisible=false
 
     }
 
@@ -99,6 +106,8 @@ class LoginActivity : AppCompatActivity() {
 
                 } else if (!password.isEmpty() && !email.isEmpty()) {
 
+                    lnLoadProgressBar.isVisible=true
+
                     auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(object : OnCompleteListener<AuthResult> {
                         override fun onComplete(p0: Task<AuthResult>) {
 
@@ -110,6 +119,8 @@ class LoginActivity : AppCompatActivity() {
 
                                 //adding db from Realtime database
                                 addingDb(user!!)
+
+                                lnLoadProgressBar.isVisible=false
 
                                 var editor=applicationContext.getSharedPreferences("accountLogin",Activity.MODE_PRIVATE).edit()
 
@@ -133,12 +144,16 @@ class LoginActivity : AppCompatActivity() {
                                 when(errorCode){
                                     "ERROR_INVALID_EMAIL"->{
 
+                                        lnLoadProgressBar.isVisible=false
+
                                         Toast.makeText(applicationContext, "Sai tài khoản gmail!", Toast.LENGTH_SHORT).show()
 
                                         inputEmail.requestFocus()
 
                                     }
                                     "ERROR_WRONG_PASSWORD"->{
+
+                                        lnLoadProgressBar.isVisible=false
 
                                         Toast.makeText(applicationContext, "Sai mật khẩu!", Toast.LENGTH_SHORT).show()
 
@@ -174,6 +189,10 @@ class LoginActivity : AppCompatActivity() {
 
         var sharedPreferences=applicationContext.getSharedPreferences("checkingCreateDb", Context.MODE_PRIVATE)
 
+        var sharedPreferencesAccount=applicationContext.getSharedPreferences("accountLogin", Context.MODE_PRIVATE)
+
+        var beforeEmail=sharedPreferencesAccount.getString("Email","")
+
         var isAddingDbFromRealtimeDbFirst=sharedPreferences.getBoolean("isAddingDbfromRealtime",false)
 
         if (!isAddingDbFromRealtimeDbFirst) {
@@ -197,6 +216,73 @@ class LoginActivity : AppCompatActivity() {
                     var dataUser=p0.children.iterator().next()
 
                     var idUser=dataUser.key.toString()
+
+                    categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (ca in p0.children) {
+
+                                var category = ca.getValue(Category::class.java)
+
+                                if(category!!.hashIdUser.equals(idUser))dbHandler.createNewCategory(category!!)
+
+                            }
+
+                        }
+                    })
+
+                    eventDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+
+                            for (e in p0.children) {
+
+                                var eventFb = e.getValue(EventFb::class.java)
+
+                                var event = Event(eventFb!!, eventFb!!.levelRecusion)
+
+                                if(event.hashIdUser.equals(idUser))dbHandler.createNewEvent(event)
+
+                            }
+
+                        }
+
+                    })
+
+                    Toast.makeText(applicationContext, "Đồng bộ cơ sở dữ liệu thành công!", Toast.LENGTH_SHORT).show()
+
+                }
+
+            })
+
+        }else if(!currentUser.email!!.equals(beforeEmail)){
+
+            userDatabase.orderByChild("email").equalTo(currentUser!!.email).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    //Drop db of (current User)/(before user) then adding new database of current User
+                    dbHandler.dropDb()
+
+                    var dataUser=p0.children.iterator().next()
+
+                    var idUser=dataUser.key.toString()
+
+                    var editor=applicationContext.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE).edit()
+
+                    editor.putString("hashidUser",idUser)
+
+                    editor.commit()
 
                     categoryDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {

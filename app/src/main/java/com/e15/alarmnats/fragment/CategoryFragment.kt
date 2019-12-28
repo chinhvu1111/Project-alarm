@@ -1,5 +1,6 @@
 package com.e15.alarmnats.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -474,6 +475,12 @@ class CategoryFragment : Fragment() {
 
                 }
 
+                if(!dataGroup.exists()){
+
+                    displayEventsWithouHavingGroup()
+
+                }
+
                 //Get all data in the group table data
                 // to (filter get (all key groups) that user has registered)
                 groupDatabase.addValueEventListener(object : ValueEventListener {
@@ -699,6 +706,71 @@ class CategoryFragment : Fragment() {
         return v
     }
 
+    fun displayEventsWithouHavingGroup(){
+        var sharedPreferences=context!!.getSharedPreferences("CurrentUserInfo", Context.MODE_PRIVATE)
+
+        var currentHashIdUser=sharedPreferences.getString("hashidUser","")
+
+        selectedCurrentMemberHashId=currentHashId
+
+        //In this case, we check fail although database hasn't tuple but even display as this
+        //Get all Event having (user) having (hashId) is similar to (selected user)
+        databaseEvents.ref.orderByChild("hashIdUser").equalTo(currentHashIdUser)
+
+        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (p0.hasChildren()) {
+
+                    //Thís attribute is used to check whether Realtime database having (Events)
+                    //Corresponding to (Selected user)
+                    //Event has (hashIdUser)
+                    var isExist = false
+
+                    var dataEvents = p0.children
+
+                    allItems.clear()
+
+                    for (e in dataEvents) {
+
+                        if (e.child("hashIdUser").value!!.equals(currentHashIdUser)) {
+
+                            isExist = true
+
+                            var eventFb = e.getValue(EventFb::class.java)
+
+                            var event = Event(eventFb!!, eventFb!!.levelRecusion)
+
+                            allItems.add(event)
+
+                        }
+
+                    }
+
+//                            adapter!!.notifyDataSetChanged()
+
+                    //If don't exist any item as this then (isExist=false)
+                    // --> adapter is empty
+                    //Because in this case, adapter is not allowed empty because multuply level
+                    //==> Try catch when occuring fail out
+                    if (isExist) fillAllItems(false, currentHashId, allItems)
+                    else {
+                        addOnlyCategoryToAllItems()
+                    }
+
+                } else {
+                    addOnlyCategoryToAllItems()
+                }
+
+            }
+
+        })
+    }
+
     fun addOnlyCategoryToAllItems() {
         try {
 
@@ -733,6 +805,9 @@ class CategoryFragment : Fragment() {
                             //Build a (CategoryItem) base (Category) (at index)
                             //Note that: This item has (CATEGORY_TYPE)
                             val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, false, category.color)
+
+                            //Getting id user to click add event into this category
+                            categoryItem.hashIdUser=currentHashId
 
                             allItems.add(categoryItem)
 

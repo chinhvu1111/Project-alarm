@@ -1,15 +1,23 @@
 package com.e15.alarmnats.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.e15.alarmnats.Database.ReminderDatabase
+import com.e15.alarmnats.Model.Category
 import com.e15.alarmnats.Model.Event
 import com.e15.alarmnats.R
+import com.e15.alarmnats.adapter.EventsAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.multilevelview.models.RecyclerViewItem
 import lecho.lib.hellocharts.gesture.ZoomType
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener
 import lecho.lib.hellocharts.model.Axis
@@ -57,7 +65,9 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
     lateinit var listEventsToTalTimer: ArrayList<Long>
 
-    var isClick:Boolean = false
+    lateinit var listEndSubStart:ArrayList<Long>
+
+    var isClick:Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -89,6 +99,8 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
         rdRemainingTime.setOnClickListener(this)
 
         listEventsToTalTimer = ArrayList()
+
+        listEndSubStart= ArrayList()
 
         //populate date information to UI
         var calendar = Calendar.getInstance()
@@ -222,13 +234,13 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
             R.id.rdWorkingTime -> {
 
-                if(isClick){
+                if(!isClick){
                     Thread.sleep(500)
                 }
 
-                if(isClick){
+                if(!isClick){
 
-                    isClick=false
+                    isClick=true
 
                     prepareDataAnimation()
 
@@ -239,13 +251,13 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
             R.id.rdRemainingTime -> {
 
-                if(!isClick){
+                if(isClick){
                     Thread.sleep(500)
                 }
 
-                if(!isClick){
+                if(isClick){
 
-                    isClick=true
+                    isClick=false
 
                     prepareDataAnimation()
 
@@ -263,9 +275,11 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
         listEventsToTalTimer.clear()
 
+        listEndSubStart.clear()
+
         var format = SimpleDateFormat("MM/dd/yyyy")
 
-        var listTask = dbHandler.allEvents.filter { event -> event.levelRecusion==0 }
+        var listTask = fillAllItems(false).filter { event -> event.levelRecusion==0 }
 
         var calendar = Calendar.getInstance()
 
@@ -278,7 +292,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
         //DAY_OF_WEEK
         //Field number for get and set indicating the day of the week.
         // This field takes values SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and SATURDAY.
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         var days = arrayOfNulls<String>(7)
 
@@ -286,7 +300,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
             days[i] = format.format(calendar.time)
 
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)+1)
 
         }
 
@@ -307,9 +321,10 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
                 var event = Event(0)
 
                 if (i != 7) {
+                    //Calculating all time of childs of current process
                     listTask.forEach {
 
-                        if (it.date.equals(days[i])) {
+                        if (format.format(format.parse(it.date)).equals(days[i])) {
 
                             var timerFormat = SimpleDateFormat("HH:mm")
 
@@ -319,9 +334,9 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
                             var difference: Long
 
-                            difference = endTime.time - startTime.time - it.remainingTime
+                            difference = endTime.time - startTime.time
 
-                            offsetTimer += (endTime.time - startTime.time) / 1000 / 60
+                            offsetTimer += caculateAllRemainingTimeOfChilds(it,listTask as ArrayList<Event>)/60/1000
 
                             totalTimer += difference / 60 / 1000
 
@@ -333,8 +348,11 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
                 listEventsToTalTimer.add(offsetTimer)
 
+                listEndSubStart.add(totalTimer.toLong())
+
                 var subColumn = SubcolumnValue(totalTimer, ChartUtils.pickColor())
 
+                //Set label for each day
                 if (i < 7) subColumn.setLabel(days[i]!!.substring(0, days[i]!!.length - 5))
                 else {
                     subColumn.setLabel("")
@@ -346,6 +364,8 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
             val column = Column(values)
             column.setHasLabels(hasLabels)
             column.setHasLabelsOnlyForSelected(hasLabelForSelected)
+
+            //Add column corresponding days of (a current week)
             columns.add(column)
         }
 
@@ -380,9 +400,11 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
         listEventsToTalTimer.clear()
 
+        listEndSubStart.clear()
+
         var format = SimpleDateFormat("MM/dd/yyyy")
 
-        var listTask = dbHandler.allEvents.filter { event -> event.levelRecusion==0 }
+        var listTask = fillAllItems(false).filter { event -> event.levelRecusion==0 }
 
         var calendar = Calendar.getInstance()
 
@@ -395,7 +417,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
         //DAY_OF_WEEK
         //Field number for get and set indicating the day of the week.
         // This field takes values SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and SATURDAY.
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         var days = arrayOfNulls<String>(7)
 
@@ -403,7 +425,7 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
             days[i] = format.format(calendar.time)
 
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)+1)
 
         }
 
@@ -414,11 +436,12 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
         for (i in 0 until numColumns) {
 
             listEventsToTalTimer.add(0)
+            listEndSubStart.add(0)
             //This is values of (a single column)
             values = ArrayList()
             for (task in listTask) {
 
-                if (i < 7 && task.date.equals(days[i])) {
+                if (i < 7 && format.format(format.parse(task.date)).equals(days[i])) {
 
                     var offsetTimer = 0.toLong()
 
@@ -434,11 +457,13 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
 
                     difference = endTime.time - startTime.time - task.remainingTime
 
-                    offsetTimer = (endTime.time - startTime.time) / 60 / 1000
+                    offsetTimer = caculateAllRemainingTimeOfChilds(task,listTask as ArrayList<Event>)/60/1000
 
                     timer += difference / 60 / 1000
 
                     listEventsToTalTimer.add(offsetTimer)
+
+                    listEndSubStart.add(difference/60/1000)
 
                     var subColumn = SubcolumnValue(timer.toFloat(), ChartUtils.pickColor())
 
@@ -503,35 +528,257 @@ class StatTasksFragment : Fragment(), View.OnClickListener {
         //a number of the element
         var count = 0
 
+        //Loop for (all columns) of data then change value of (each column)
         for (indexColumn in data!!.columns.indices) {
 
             var currentColumn = data!!.columns.get(indexColumn)
 
             count++
 
+            //Current column may be has several subcolumns and
+            // we need to change (value of each subcolumn)
             for (index in currentColumn.values.indices) {
 
+                //Count to position of each (subcolumn)
+                //We we save all value event base on (linear order)
                 count++
 
                 var currentSubColumn = currentColumn.values.get(index)
 
+                //Getting value of (current subcolumn)
                 var currentValue = currentSubColumn.value
 
                 var targetValue = 0.toFloat()
 
                 if (dataType == RESPECTIVE_DATA) {
 
-                    targetValue = listEventsToTalTimer.get(count-1).toFloat() - currentValue
+                    //If we choose stack data type
+                    if(!isClick) targetValue = listEventsToTalTimer.get(count-1).toFloat()
+                    else{
+
+                        //If We re-click restart total time to initialization
+                        targetValue = listEndSubStart.get(count-1).toFloat()
+
+                    }
 
                 } else {
 
-                    targetValue = listEventsToTalTimer.get(indexColumn).toFloat() - currentValue
+                    //If we choose total
+                    if(!isClick) targetValue = listEventsToTalTimer.get(indexColumn).toFloat()
+                    else{
+
+                        //If We re-click restart total time to initialization
+                        targetValue = listEndSubStart.get(indexColumn).toFloat()
+
+                    }
 
                 }
 
                 currentSubColumn.setTarget(targetValue)
             }
         }
+    }
+
+    //return all item (in the database)
+    fun fillAllItems(isEdit: Boolean): ArrayList<Event> {
+
+        var allItems=ArrayList<Event>()
+
+        //Firstly, creating new empty ArrayList<Item>
+        val allItemsEm = ArrayList<Event>()
+
+        //Then we hold (all categorys) from (the database)
+        var categories = dbHandler!!.allCategory
+
+        //Looping for (All categories)
+        for (i in categories!!.indices) {
+
+            val category = categories!![i]
+
+            //Build a (CategoryItem) base (Category) (at index)
+            //Note that: This item has (CATEGORY_TYPE)
+            val categoryItem = Event(0, category.title, Category.CATEGORY_TYPE, -2, category.hasIdCategory, isEdit, category.color)
+
+            categoryItem.hashIdUser=category.hashIdUser
+
+            //Add item has CATEGORY_TYPE
+            allItemsEm.add(categoryItem)
+
+            //Getting (all items) from database (corresponding category)
+            // (has this cagory) in (the current loop)
+            var events = dbHandler!!.getEventsByCategory(category.title)
+
+            var tempEvents = ArrayList<Event>()
+
+            for (j in events.indices) {
+
+                val e = events.get(j)
+
+                Log.e("--------doneOrNot", e.isDone.toString())
+
+                val eventItem = Event(e.hashId, 0, e.title!!, e.description!!, e.place!!,
+                        e.category!!, e.startTime!!, e.endTime, e.date!!,
+                        e.isShow!!, Event.EVENT_TYPE, e.notify!!, e.repeatMode!!,
+                        e.repeatCount!!, e.repeatType!!, 0, categoryItem.color!!)
+
+                eventItem.isDone = e.isDone
+                eventItem.remainingTime = e.remainingTime
+                eventItem.levelRecusion = e.levelRecusion
+                eventItem.parentId = e.parentId
+                eventItem.addChildren(e.children)
+                allItemsEm.add(eventItem)
+            }
+
+            //Add child but displaying base on (levelRecusion) of (the corresponding node)
+            recusiveListEvent(allItemsEm as ArrayList<Event>, 0)
+
+            //All node have recustion==0 --> is added to allItems
+            //Category has (levelRecursion==-2)
+            for (e in allItemsEm) {
+
+                if (e.parentId.equals("") || e.levelRecusion == -2) {
+
+                    tempEvents.add(e)
+
+                }
+
+            }
+
+            allItems.clear()
+
+            allItems.addAll(tempEvents)
+
+        }
+
+
+        return allItems
+    }
+
+    fun recusiveListEvent(listEvents: ArrayList<Event>, level: Int) {
+
+        for (e in listEvents.indices) {
+
+            if (listEvents.get(e).levelRecusion == level) {
+
+                var listChilds: ArrayList<Event> = ArrayList<Event>()
+
+                for (e1 in listEvents) {
+
+                    //Reach (one node) then reachs (all orther nodes)
+                    //If (any node) has (parenrId== node.id) --> Add child
+                    if (listEvents.get(e).hashId.equals(e1.parentId) && e1.levelRecusion == level + 1) {
+
+                        recusiveListEvent(listEvents, level + 1)
+
+                        listChilds.add(e1)
+
+                    }
+
+                }
+
+                if (listChilds.size != 0) listEvents.get(e).addChildren(listChilds as List<RecyclerViewItem>?)
+
+            }
+
+        }
+
+    }
+
+    //This function is used to caculate all remaining time childs
+    fun caculateAllRemainingTimeOfChilds(currentTime: Event, allItems: ArrayList<Event>): Long {
+
+        var finalTotal: Long = 0
+
+        for (i in allItems) {
+
+            //Getting (current item) from (allitems)
+            if (i.hashId.equals(currentTime.hashId)) {
+
+                var totalchilds = 0.toLong()
+
+                var workingTimeOfCurrenTask: Long = 0
+
+                if (i.hasChildren()) {
+
+                    for (child in i.children) {
+
+                        totalchilds += caculateAllRemainingTimeOfChilds(child as Event, i.children as ArrayList<Event>)
+
+                        child as Event
+
+                        //It is used to hold (all interval time of childs)
+                        var totalIntervalStartEndTime = 0.toLong()
+
+                        //This is used to updating workingTime of (a current task) each times
+                        for (subOfSubItem in i.children) {
+
+                            subOfSubItem as Event
+
+                            var formatter = SimpleDateFormat("HH:mm")
+
+                            var startTime = formatter.parse(subOfSubItem.startTime)
+
+                            var endTime = formatter.parse(subOfSubItem.endTime)
+
+                            totalIntervalStartEndTime += endTime.time - startTime.time
+
+                        }
+
+                        //Hold all (inteval time) of (the current child task)
+                        var formatter = SimpleDateFormat("HH:mm")
+
+                        var startTime = formatter.parse(i.startTime)
+
+                        var endTime = formatter.parse(i.endTime)
+
+                        var difference = endTime.time - startTime.time
+
+                        //this parameter is used to save (total of all childs interval time)
+//                        totalIntervalTimeOfChildTasks+=difference
+
+                        //If (remainintTime ==-1) it means that this (current child) task (has run)
+                        if (i.remainingTime != -1.toLong() && i.remainingTime != difference - totalIntervalStartEndTime) {
+
+                            //We holds (all time) of (current task)
+                            // - (total (all times) of child tasks)
+                            // - (remainingTime)
+                            totalchilds += difference - totalIntervalStartEndTime - i.remainingTime
+
+                        }
+
+                    }
+
+                }
+
+                //Updating ignores Category
+                //For child task hasn't childs
+                // (child has run but not having subchild task)
+                if (!i.hasChildren() && i.type != 0) {
+
+                    //These lines are used to caculate working time of current task
+                    var formatter = SimpleDateFormat("HH:mm")
+
+                    var startTime = formatter.parse(i.startTime)
+
+                    var endTime = formatter.parse(i.endTime)
+
+                    var difference = endTime.time - startTime.time
+
+                    if (i.remainingTime != -1.toLong() && i.remainingTime != difference) {
+
+                        workingTimeOfCurrenTask = difference - i.remainingTime
+
+                    }
+
+                }
+
+                finalTotal += totalchilds + workingTimeOfCurrenTask
+
+            }
+        }
+
+        return finalTotal
+
     }
 
     private inner class ValueTouchListener : ColumnChartOnValueSelectListener {

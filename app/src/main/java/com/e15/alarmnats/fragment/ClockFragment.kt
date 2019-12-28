@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.e15.alarmnats.R
 import java.text.SimpleDateFormat
+import java.util.*
 
 class ClockFragment:Fragment() {
 
@@ -27,7 +28,9 @@ class ClockFragment:Fragment() {
 
         val dateString = sdfDate.format(date)
         val timeString = sdfTime.format(date)
-        val greetingTimeString = sdfGreetingTime.format(date)
+        var calendar= Calendar.getInstance()
+
+        var timeOfDay=calendar.get(Calendar.HOUR_OF_DAY)
 
         //this is in a try block since the reference returns null when on
         //different pages
@@ -37,21 +40,21 @@ class ClockFragment:Fragment() {
         } catch (e: NullPointerException) {
         }
 
-        if (Integer.valueOf(greetingTimeString) < 12) {
+        if (timeOfDay>=0&&timeOfDay<12) {
 
             tGreeting.text = "Chào buổi sáng"
 
             tampm.text = "AM"
 
-        } else if (Integer.valueOf(greetingTimeString) < 17) {
+        } else if (timeOfDay>=12&&timeOfDay<16) {
 
-            tGreeting.text = "Chào buổi tối"
+            tGreeting.text = "Chiều đến rồi"
 
             tampm.text = "PM"
 
         } else {
 
-            tGreeting.text = "Chiều đến rồi"
+            tGreeting.text = "Chào buổi tối"
 
             tampm.text = "PM"
 
