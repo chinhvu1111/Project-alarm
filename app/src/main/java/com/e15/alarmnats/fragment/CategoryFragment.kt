@@ -628,25 +628,31 @@ class CategoryFragment : Fragment() {
 
                                                         //In this case, we check fail although database hasn't tuple but even display as this
                                                         //Get all Event having (user) having (hashId) is similar to (selected user)
-                                                        databaseEvents.ref.orderByChild("hashIdUser").equalTo(listMember.get(position).hashId)
+//                                                        databaseEvents.ref.orderByChild("hashIdUser").equalTo(listMember.get(position).hashId)
 
-                                                        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
+                                                        var databaseEventsNew=firebaseDatabase.getReference("Events")
+
+                                                        databaseEventsNew.addValueEventListener(object : ValueEventListener {
                                                             override fun onCancelled(p0: DatabaseError) {
 
                                                             }
 
-                                                            override fun onDataChange(p0: DataSnapshot) {
+                                                            override fun onDataChange(p6: DataSnapshot) {
 
-                                                                if (p0.hasChildren()) {
+                                                                if (p6.hasChildren()) {
 
                                                                     //Thís attribute is used to check whether Realtime database having (Events)
                                                                     //Corresponding to (Selected user)
                                                                     //Event has (hashIdUser)
                                                                     var isExist = false
 
-                                                                    var dataEvents = p0.children
+                                                                    var dataEvents = p6.children
 
                                                                     allItems.clear()
+
+//                                                                    var x=dataEvents.iterator() as MutableIterator
+
+                                                                    var check=ArrayList<EventFb>()
 
                                                                     for (e in dataEvents) {
 
@@ -662,8 +668,11 @@ class CategoryFragment : Fragment() {
 
                                                                         }
 
+                                                                        check.add(e.getValue(EventFb::class.java)!!)
+
                                                                     }
 
+                                                                    check
 //                            adapter!!.notifyDataSetChanged()
 
                                                                     //If don't exist any item as this then (isExist=false)
@@ -738,7 +747,7 @@ class CategoryFragment : Fragment() {
         //Get all Event having (user) having (hashId) is similar to (selected user)
         databaseEvents.ref.orderByChild("hashIdUser").equalTo(currentHashIdUser)
 
-        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseEvents.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -1031,7 +1040,7 @@ class CategoryFragment : Fragment() {
         databaseEvents.ref.orderByChild("hashIdUser").equalTo(selectedCurrentMemberHashId)
 
         //(AddValueEventListener) because when data is changed then we (must update it)
-        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseEvents.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }

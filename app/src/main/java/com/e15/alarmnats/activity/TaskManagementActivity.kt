@@ -929,7 +929,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
             hourPicker.maxValue = (event!!.remainingTime / 1000 / 60 / 60).toInt()
 
-            minutePicker.maxValue = ((event.remainingTime - hourPicker.maxValue * 60 * 60 * 1000) / 60 / 1000).toInt()
+            minutePicker.maxValue = (event!!.remainingTime / 1000 / 60).toInt()
 
         }else{
 
@@ -1917,7 +1917,7 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
                     Utils.showToastMessage("Lưu tác vụ thành công", applicationContext)
 
-                    categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
+//                    categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
 
                     allEventsFragment!!.refreshEvents()
 
