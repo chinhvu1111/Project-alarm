@@ -167,6 +167,7 @@ class GroupTask : Fragment,View.OnClickListener {
                             //Child(abc) --> has (children data)
                             var dataSnapShot=g.child("/Group")
 
+                            //Getting all groups of current user
                             var groupKeySnapShot=dataSnapShot.children
 
                             for(keyGroup in groupKeySnapShot){

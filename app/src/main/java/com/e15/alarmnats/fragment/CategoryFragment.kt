@@ -10,11 +10,8 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.e15.alarmnats.Model.Category
-import com.e15.alarmnats.Model.Event
 import com.e15.alarmnats.Database.ReminderDatabase
-import com.e15.alarmnats.Model.EventFb
-import com.e15.alarmnats.Model.User
+import com.e15.alarmnats.Model.*
 import com.e15.alarmnats.R
 import com.e15.alarmnats.adapter.EventsAdapter
 import com.e15.alarmnats.utils.Utils
@@ -74,6 +71,16 @@ class CategoryFragment : Fragment() {
 
     lateinit var progressLoadTask:RelativeLayout
 
+    lateinit var listCurrentUserGroup:ArrayList<Group>
+
+    companion object {
+
+        var selectedGroup:Group?=null
+
+        var selectedIdUser=""
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -97,6 +104,8 @@ class CategoryFragment : Fragment() {
 //        progressLoadTask=view!!.findViewById(R.id.progressLoadTask)
 
         dbHandler = ReminderDatabase(this!!.context!!)
+
+        listCurrentUserGroup= ArrayList()
 
     }
 
@@ -486,6 +495,8 @@ class CategoryFragment : Fragment() {
                 groupDatabase.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
 
+                        listCurrentUserGroup.clear()
+
                         var groupIterative = p0.children
 
                         for (dataGroup in groupIterative) {
@@ -495,6 +506,8 @@ class CategoryFragment : Fragment() {
 
                                 //get value of child having (name path)
                                 listGroup.add(dataGroup.child("name").value.toString())
+
+                                listCurrentUserGroup.add(dataGroup.getValue(Group::class.java)!!)
 
                             }
 
@@ -513,6 +526,8 @@ class CategoryFragment : Fragment() {
 
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
+                                selectedGroup=listCurrentUserGroup.get(position)
+
                                 listCorresPondingKeyUser.clear()
 
                                 //Get (selected key group) from (spn)
@@ -522,6 +537,8 @@ class CategoryFragment : Fragment() {
                                     override fun onDataChange(p0: DataSnapshot) {
 
                                         var dataTuples = p0.children
+
+                                        var i=0
 
                                         for (tuple in dataTuples) {
 
@@ -604,6 +621,8 @@ class CategoryFragment : Fragment() {
 
                                                         //This field holds (hashId value) of (selected current member)
                                                         selectedCurrentMemberHashId = listMember.get(position).hashId
+
+                                                        selectedIdUser=selectedCurrentMemberHashId
 
                                                         currentHashId = selectedCurrentMemberHashId
 
@@ -712,6 +731,8 @@ class CategoryFragment : Fragment() {
         var currentHashIdUser=sharedPreferences.getString("hashidUser","")
 
         selectedCurrentMemberHashId=currentHashId
+
+        selectedIdUser=selectedCurrentMemberHashId
 
         //In this case, we check fail although database hasn't tuple but even display as this
         //Get all Event having (user) having (hashId) is similar to (selected user)

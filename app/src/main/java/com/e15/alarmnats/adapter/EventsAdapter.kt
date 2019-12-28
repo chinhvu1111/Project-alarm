@@ -183,7 +183,17 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                     holder.imgAddEvent.setOnClickListener {
 
-                        if (!item.hashIdUser.equals(idUser)) {
+                        if(CategoryFragment.selectedGroup!=null&&CategoryFragment.selectedGroup!!.hashIdAdmin!!.equals(idUser)){
+
+                            var edit=context.getSharedPreferences("AddingByAdmin",Context.MODE_PRIVATE).edit()
+
+                            edit.putString("hashIdAddingByAdmin",CategoryFragment.selectedIdUser)
+
+                            edit.commit()
+
+                            Toast.makeText(context, "Bạn là Admin bạn được phép thêm tác vụ trong group này!", Toast.LENGTH_SHORT).show()
+
+                        }else if (!item.hashIdUser.equals(idUser)) {
 
                             Toast.makeText(context, "Tác vụ này không phải của bạn, bạn chưa được cấp quyền thao tác!", Toast.LENGTH_SHORT).show()
 

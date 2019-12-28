@@ -1469,9 +1469,24 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
 
                 }
 
+                var shared=applicationContext.getSharedPreferences("AddingByAdmin",Context.MODE_PRIVATE)
+
+                var hashIdUserADdingByAdmin=shared.getString("hashIdAddingByAdmin","")
+
                 //Assigning hashId for new event
                 //Using realtime database
-                createEventRealtimedatabase(e)
+                if(hashIdUserADdingByAdmin.equals("")) createEventRealtimedatabase(e)
+                else{
+
+                    createEventAddingByAdmin(e,hashIdUserADdingByAdmin)
+
+                    var edit=applicationContext.getSharedPreferences("AddingByAdmin",Context.MODE_PRIVATE).edit()
+
+                    edit.putString("hashIdAddingByAdmin","")
+
+                    edit.commit()
+
+                }
 
                 listenerRealtimeDatabase()
 
@@ -1942,6 +1957,33 @@ class TaskManagementActivity : AppCompatActivity(), View.OnClickListener,
         }
 
     }
+
+    fun createEventAddingByAdmin(event:Event,hashIdUserAddingByAdmin:String){
+
+        var idRt=databaseEvents.push().key
+
+        var eventFb=EventFb(event)
+
+        //Getting key of event
+        eventFb.hashId=idRt!!
+
+        event.hashId=idRt!!
+
+        //Getting (the key of user)
+        eventFb.hashIdUser=hashIdUserAddingByAdmin
+
+        event.hashIdUser=hashIdUserAddingByAdmin
+
+        databaseEvents.child(idRt!!).setValue(eventFb)
+
+        Utils.showToastMessage("Lưu tác vụ thêm bởi admin thành công", applicationContext)
+
+        categoryFragment!!.refresh(Event(0,event.title!!, "", Event.EVENT_TYPE, false, 0))
+
+        allEventsFragment!!.refreshEvents()
+
+    }
+
     fun caculatingAllTimeOfChilds(event:Event):Long{
 
         var time:Long=0;

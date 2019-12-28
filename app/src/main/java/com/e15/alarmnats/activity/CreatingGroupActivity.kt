@@ -168,8 +168,6 @@ class CreatingGroupActivity : AppCompatActivity(), View.OnClickListener {
 
             var group = Group(idGroup!!, nameGroup, 1, path)
 
-            databaseGroup.child(idGroup!!).setValue(group)
-
             //Creating user and the group is nested in user
             var databaseUser = firebase.getReference("User")
 
@@ -202,6 +200,10 @@ class CreatingGroupActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     idUser = p0.children.iterator().next().key.toString()
+
+                    group.hashIdAdmin=idUser
+
+                    databaseGroup.child(idGroup!!).setValue(group)
 
                     var email = intent.getStringExtra("Email")
 
