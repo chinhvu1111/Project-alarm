@@ -1031,7 +1031,7 @@ class CategoryFragment : Fragment() {
         databaseEvents.ref.orderByChild("hashIdUser").equalTo(selectedCurrentMemberHashId)
 
         //(AddValueEventListener) because when data is changed then we (must update it)
-        databaseEvents.addValueEventListener(object : ValueEventListener {
+        databaseEvents.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }

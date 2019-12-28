@@ -185,13 +185,17 @@ class EventsAdapter(private val context: Context, allItems: ArrayList<Event>,
 
                         if(CategoryFragment.selectedGroup!=null&&CategoryFragment.selectedGroup!!.hashIdAdmin!!.equals(idUser)){
 
-                            var edit=context.getSharedPreferences("AddingByAdmin",Context.MODE_PRIVATE).edit()
+                            if(!item.hashIdUser.equals(idUser)){
 
-                            edit.putString("hashIdAddingByAdmin",CategoryFragment.selectedIdUser)
+                                var edit=context.getSharedPreferences("AddingByAdmin",Context.MODE_PRIVATE).edit()
 
-                            edit.commit()
+                                edit.putString("hashIdAddingByAdmin",CategoryFragment.selectedIdUser)
 
-                            Toast.makeText(context, "Bạn là Admin bạn được phép thêm tác vụ trong group này!", Toast.LENGTH_SHORT).show()
+                                edit.commit()
+
+                                Toast.makeText(context, "Bạn là Admin bạn được phép thêm tác vụ trong group này!", Toast.LENGTH_SHORT).show()
+
+                            }
 
                         }else if (!item.hashIdUser.equals(idUser)) {
 
